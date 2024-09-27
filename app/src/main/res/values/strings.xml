@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="startBtn">Start</string>
+    <string name="stepBtn">Step</string>
+</resources>

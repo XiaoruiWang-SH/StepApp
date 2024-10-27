@@ -1,3 +1,6 @@
+Group members: Ding Ning & Wang Zitian & Wang Xiaorui
+Group name:
+
 1. What is the name of your app?
 BestRunner
 
@@ -34,3 +37,62 @@ locally.
 10. Motivate your answer to question 9 (i.e., explain why your app stores data and why it
 does so only locally/remotely or in both ways). (Max. 650 characters)
 Our app stores data locally to display statistical analysis and generate visual graphs for users. Additionally, it analyzes training data to create personalized plans. We choose to store data locally for two main reasons: First, local storage is sufficient for our needs without the necessity of sending data remotely. Second, it enhances security, as keeping data on the device reduces potential risks associated with remote storage. Therefore, storing data locally is the best option for both functionality and privacy.
+
+11. Which type of data visualization your app offers and why. If you answered no to
+question 11, explain why data visualization is not necessary for your app. 
+Line Charts: For displaying patterns over time, such as pace, distance, or heart rate during runs. This allows users to track improvements or identify problems.
+Bar Charts: Great for comparing stats over many runs, such as weekly distances or time spent in different pace zones.
+Heatmaps: Used to depict running intensity by time of day or day of the week, allowing users to see patterns in their performance.
+Maps: Display running routes with lengths, elevation changes, and route comparisons, frequently utilizing GPS data.
+Pie Charts/Donuts: To break out the time spent in different heart rate or pace zones during a run.
+Scatter Plots: Useful for illustrating connections between variables, such as pace against heart rate, which allows users to observe how different aspects affect their performance.
+
+12. Does your app perform any type of data processing on the collected sensor data?
+Yes
+
+13. If you answered yes to question 13 explain which type of data processing your app
+performs on the collected data and why. If you answered no to question 13 explain why
+data processing is not necessary for your app. (Max. 650 characters)
+Data Cleaning is removing incomplete or incorrect data, such as GPS inaccuracy or outliers in pace owing to signal loss. Accurate data leads to trustworthy analysis.
+Aggregation: Summarizing data across certain time periods (daily, weekly, or monthly) allows users to better understand their general performance patterns, such as total distance traveled or average pace.
+Statistical Analysis: Calculating essential data such as average speed, median heart rate, and total elevation gain gives customers useful feedback on their running experiences.
+GPS Data Processing: Converting raw GPS data into comprehensive route maps, calculating distance, and identifying elevation changes allow users to view their runs and analyze their performance across varied terrains.
+
+14. How do you evaluate whether your app performs correctly and achieves its goal (i.e., solves the problem described in question 2)? (Max. 650 characters)
+Unit Testing: Check that individual functions, such as pace computation, distance measurement, and data visualization rendering, work as expected. This prevents faults and failures in essential functions.
+Integration tests: Determine how well the app's various components operate together. For example, does GPS data properly integrate into route visualizations? Does the data pipeline efficiently handle incoming data?
+Performance testing involves determining how fast and accurately the app processes huge datasets, particularly when dealing with GPS or heart rate data, as well as if the app can manage long-running sessions or several users without latency.
+
+15. Which permissions does your app require to be granted by the user? (Max. 200 characters)
+Location (GPS): Tracks the user's running route, calculates distance, and examines speed and elevation statistics. This permission is critical for mapping runs and providing route-based analysis.
+Storage Access: Allows you to preserve user data such as run history, preferences, and settings, as well as export reports and route maps. It also provides access to the user's local files and cloud services for data backup and sharing purposes.Network access: Upload user data to the cloud LLM, analyze the user's running data and provide a plan.
+
+16. Does the app raise any ethical issues?
+Yes
+
+17. Motivate your answer to question 16 (Max. 300 char.)
+User Privacy: GPS tracking reveals users' positions, which poses privacy hazards such as revealing home addresses or daily routines. Improper handling or dissemination of this data could pose security risks.
+Data Security: Uploading data to the cloud increases the danger of data breach. To protect user information, cloud providers must include strong encryption and access controls. Unauthorized third-party access to sensitive data may jeopardize user confidence.
+LLM Processing Risks: When LLMs are utilized, they may keep patterns from user data, providing a privacy risk. Full transparency is required regarding what data is processed and how.
+Informed Consent: Users should have a clear understanding of how their data is gathered, stored, and utilized, with the opportunity to opt out of cloud uploads or LLM processing.
+
+18.  Which are the main challenges that you expect to encounter in order to build your app?
+(Max. 300 characters)
+Integrating a Large Language Model (LLM) API into a running analysis program may provide many significant challenges:
+Data Privacy and Security: Processing sensitive user data while integrating with an LLM presents serious privacy problems. Ensuring that personal data is anonymized and processed securely is critical for preserving user confidence and complying with data protection rules.
+Real-Time Processing: Running applications frequently require real-time feedback, yet LLMs can cause lag in answers. Managing performance and keeping the app fast and responsive is critical for the user experience.
+Model Accuracy and Relevance: LLMs might produce off-topic or erroneous results for specific use situations. Fine-tuning or adapting the LLM for running-related inquiries, as well as assuring the reliability of the advise it gives, will be critical challenges.
+
+19. Add a sketch for your app storyboard
+![stepAPP_stroryBoard](stepStoryboard_1.jpg)
+![stepAPP_stroryBoard](stepStroryboard_2.jpg)
+
+20. Provide description for your app for your app storyboard
+1.“storyboard",Jogging","Running","AI-generated","Training plan","Fitness tracking","Smartphone interface","Personal trainer","Progress summary","Exercise goals","Health tracking","Running app","User interface","Workout generation","Data visualization","Performance analysis","Personalized training","Physical activity","Outdoor running","AI assistant","Mobile health app","Active lifestyle","Heart rate monitor","Goal tracking"
+
+Description:The user's experience using my AI-powered running app, which serves as a personal coach for runners, is depicted in the first storyboard. The software assists users in creating customised running schedules according to their health information, experience, and training objectives. The user launches the application and enters personal information, including height, weight, and exercise goals, on the first panel. After analysing this data, the AI creates a personalised running schedule that recommends the best exercise lengths, speeds, and intensities.
+The program tracks the user's activities in real-time as they start their run, keeping an eye on variables like heart rate, distance travelled, and speed. The AI provides coaching while on the go, modifying the strategy in response to performance in real time. The app offers a thorough progress summary after a run, complete with statistics and graphs that display distance travelled, calories burned, and overall performance. The AI then adjusts the running schedule to reflect the user's gains, guaranteeing that their fitness journey continues to advance.
+
+2."storyboard","AI coach","Training entity","Personalized plan","Weight tracking","Height input","Fitness monitoring","Exercise routine","AI-generated coach","Health statistics","User input","Mobile fitness app","Running progress","Virtual trainer","Workout schedule","Running statistics","Exercise goals","Fitness goals","Mobile interface","Health app interface","Workout app","AI-generated training","Performance tracker","Personalized fitness","Running analysis","Digital coaching"
+
+Description:An AI-powered coaching software that helps users plan and log their runs is highlighted in the second storyboard. The narrative begins with the user inputting their running objectives and personal information, like height and weight, into the app. After swiftly analysing this data, the AI creates a personalised training program that is tailored to the user's requirements and objectives.The program serves as a virtual coach during the run, keeping track of the runner's mileage, pace, and other parameters. It offers immediate feedback and makes recommendations for changes in response to the user's performance. The training schedule is continuously modified by the AI to take into account the user's present level of fitness. The app provides a thorough report following the run that includes important metrics like calories burnt and endurance gain. After that, the AI modifies the training schedule for subsequent sessions, providing a dynamic and customised fitness experience that changes based on the user's progress.

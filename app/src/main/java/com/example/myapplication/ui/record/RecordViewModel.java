@@ -1,16 +1,16 @@
-package com.example.myapplication.ui.dashboard;
+package com.example.myapplication.ui.record;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
-
+public class RecordViewModel extends ViewModel {
+    // TODO: Implement the ViewModel
     private final MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public RecordViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is Record fragment");
     }
 
     public LiveData<String> getText() {

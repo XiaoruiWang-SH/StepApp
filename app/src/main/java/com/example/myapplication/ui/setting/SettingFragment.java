@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.setting;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class SettingFragment extends Fragment {
                 new ViewModelProvider(this).get(SettingViewModel.class);
 
         binding = FragmentSettingBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        ConstraintLayout root = binding.getRoot();
 
         final TextView textView = binding.textTraining;
         settingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.training;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -36,7 +37,7 @@ public class TrainingFragment extends Fragment {
                 new ViewModelProvider(this).get(TrainingViewModel.class);
 
         binding = FragmentTrainingBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        ConstraintLayout root = binding.getRoot();
 
         final TextView textView = binding.textTraining;
         trainingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

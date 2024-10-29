@@ -14,10 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.myapplication.R;
-import com.example.myapplication.databinding.FragmentRecordBinding;
 import com.example.myapplication.databinding.FragmentSettingBinding;
-import com.example.myapplication.ui.record.RecordViewModel;
 
 public class SettingFragment extends Fragment {
 

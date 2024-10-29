@@ -11,7 +11,7 @@ public class RecordDetailViewModel extends ViewModel {
 
     public RecordDetailViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is Record fragment");
+        mText.setValue("This is Record detail fragment");
     }
 
     public LiveData<String> getText() {

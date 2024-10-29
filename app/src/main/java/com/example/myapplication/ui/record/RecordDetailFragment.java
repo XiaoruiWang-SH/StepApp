@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.databinding.FragmentRecordDetailBinding;
+import com.example.myapplication.databinding.FragmentDetailRecordBinding;
 
 public class RecordDetailFragment extends Fragment {
 
     private RecordDetailViewModel mViewModel;
 
-    private FragmentRecordDetailBinding binding;
+    private FragmentDetailRecordBinding binding;
 
     public static RecordDetailFragment newInstance() {
         return new RecordDetailFragment();
@@ -31,7 +31,7 @@ public class RecordDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 //        return inflater.inflate(R.layout.fragment_record_detail, container, false);
-        binding = FragmentRecordDetailBinding.inflate(inflater, container, false);
+        binding = FragmentDetailRecordBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(RecordDetailViewModel.class);
         ConstraintLayout root = binding.getRoot();
 

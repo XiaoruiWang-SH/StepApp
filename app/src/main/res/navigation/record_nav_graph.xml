@@ -6,18 +6,8 @@
     app:startDestination="@id/recordFragment">
 
     <fragment
-        android:id="@+id/recordDetailFragment"
-        android:name="com.example.myapplication.ui.record.RecordDetailFragment"
-        android:label="fragment_record_detail"
-        tools:layout="@layout/fragment_record_detail" />
-
-    <fragment
         android:id="@+id/recordFragment"
         android:name="com.example.myapplication.ui.record.RecordFragment"
         android:label="fragment_record"
-        tools:layout="@layout/fragment_record" >
-        <action
-            android:id="@+id/action_recordFragment_to_recordDetailFragment"
-            app:destination="@id/recordDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_record" />
 </navigation>

@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.record;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,24 +9,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.myapplication.R;
-import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.databinding.FragmentRecordBinding;
-import com.example.myapplication.ui.home.HomeViewModel;
 
 public class RecordFragment extends Fragment {
 
+    private RecordViewModel mViewModel;
     private FragmentRecordBinding binding;
 
     private Button btn;
@@ -39,9 +33,6 @@ public class RecordFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-//        NavController navController = Navigation.findNavController(requireActivity(), R.id.navigation_record);
-//        NavigationUI.setupActionBarWithNavController((AppCompatActivity) requireActivity(), navController);
 //        return inflater.inflate(R.layout.fragment_record, container, false);
         RecordViewModel recordViewModel =
                 new ViewModelProvider(this).get(RecordViewModel.class);
@@ -73,6 +64,7 @@ public class RecordFragment extends Fragment {
         constraintSet.applyTo(root);
 
         return root;
+
     }
 
     @Override

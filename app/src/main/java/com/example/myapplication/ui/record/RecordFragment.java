@@ -9,6 +9,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +51,12 @@ public class RecordFragment extends Fragment {
         btn = new Button(getContext());
         btn.setId(View.generateViewId());
         btn.setText("Click");
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_recordFragment_to_recordDetailFragment);
+            }
+        });
         root.addView(btn);
 
         ConstraintSet constraintSet = new ConstraintSet();
@@ -62,6 +71,9 @@ public class RecordFragment extends Fragment {
         constraintSet.setVerticalBias(btn.getId(), 0.3f);
 
         constraintSet.applyTo(root);
+
+//        NavController navController = Navigation.findNavController(root.getRootView());
+//        NavHostFragment.findNavController(this);
 
         return root;
 

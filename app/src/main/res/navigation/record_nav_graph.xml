@@ -9,5 +9,17 @@
         android:id="@+id/recordFragment"
         android:name="com.example.myapplication.ui.record.RecordFragment"
         android:label="fragment_record"
-        tools:layout="@layout/fragment_record" />
+        tools:layout="@layout/fragment_record" >
+        <action
+            android:id="@+id/action_recordFragment_to_recordDetailFragment"
+            app:destination="@id/recordDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/recordDetailFragment"
+        android:name="com.example.myapplication.ui.record.RecordDetailFragment"
+        android:label="fragment_detail_record"
+        tools:layout="@layout/fragment_detail_record" />
 </navigation>

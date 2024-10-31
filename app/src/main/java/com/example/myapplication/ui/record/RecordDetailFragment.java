@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentDetailRecordBinding;
@@ -38,6 +40,19 @@ public class RecordDetailFragment extends Fragment {
         final TextView textView = binding.textRecordDetail;
         mViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
+        // create a button to navigate back to the RecordFragment
+        Button btn = new Button(getContext());
+        btn.setId(View.generateViewId());
+        btn.setText("Back");
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_recordDetailFragment_to_recordFragment);
+            }
+        });
+        root.addView(btn);
+        
+
         return root;
     }
 
@@ -46,4 +61,6 @@ public class RecordDetailFragment extends Fragment {
         super.onDestroy();
         binding = null;
     }
+
+
 }

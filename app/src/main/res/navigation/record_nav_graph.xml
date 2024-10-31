@@ -22,4 +22,12 @@
         android:name="com.example.myapplication.ui.record.RecordDetailFragment"
         android:label="fragment_detail_record"
         tools:layout="@layout/fragment_detail_record" />
+<!--        add an action back to last fragment-->
+        <action
+            android:id="@+id/action_recordDetailFragment_to_recordFragment"
+            app:destination="@id/recordFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"/>
+
+
 </navigation>

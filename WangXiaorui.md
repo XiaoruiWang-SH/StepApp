@@ -84,8 +84,7 @@ Real-Time Processing: Running applications frequently require real-time feedback
 Model Accuracy and Relevance: LLMs might produce off-topic or erroneous results for specific use situations. Fine-tuning or adapting the LLM for running-related inquiries, as well as assuring the reliability of the advise it gives, will be critical challenges.
 
 19. Add a sketch for your app storyboard
-![stepAPP_stroryBoard](stepStoryboard_1.jpg)
-![stepAPP_stroryBoard](stepStroryboard_2.jpg)
+![stepAPP_stroryBoard](PrototypeDiagram.png)
 
 20. Provide description for your app for your app storyboard
 1.“storyboard",Jogging","Running","AI-generated","Training plan","Fitness tracking","Smartphone interface","Personal trainer","Progress summary","Exercise goals","Health tracking","Running app","User interface","Workout generation","Data visualization","Performance analysis","Personalized training","Physical activity","Outdoor running","AI assistant","Mobile health app","Active lifestyle","Heart rate monitor","Goal tracking"

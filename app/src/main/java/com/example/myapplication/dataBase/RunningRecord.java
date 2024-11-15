@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class RunningRecord {
     private int id;
+    private String timestamp;
     private String day;
     private String month;
     private String year;
@@ -17,8 +18,9 @@ public class RunningRecord {
     private String detailKms;
     private String mapInfo;
 
-    public RunningRecord(int id, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo) {
+    public RunningRecord(int id, String timestamp, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo) {
         this.id = id;
+        this.timestamp = timestamp;
         this.day = day;
         this.month = month;
         this.year = year;
@@ -33,6 +35,10 @@ public class RunningRecord {
 
     public int getId() {
         return id;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public String getDay() {
@@ -78,6 +84,7 @@ public class RunningRecord {
     public static RunningRecord convertFormMap(Map<String, String> map) {
         return new RunningRecord(
             Integer.parseInt(map.get("id")),
+            map.get("timestamp"),
             map.get("day"),
             map.get("month"),
             map.get("year"),
@@ -94,6 +101,7 @@ public class RunningRecord {
     public static Map<String, String> convertToMap(RunningRecord record) {
         Map<String, String> map = new HashMap<>();
         map.put("id", String.valueOf(record.getId()));
+        map.put("timestamp", record.getTimestamp());
         map.put("day", record.getDay());
         map.put("month", record.getMonth());
         map.put("year", record.getYear());

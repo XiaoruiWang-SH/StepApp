@@ -48,9 +48,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-}
 
-dependencies {
     val nav_version = "2.8.3"
 
     // Jetpack Compose integration
@@ -65,6 +63,8 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
+    implementation("com.google.code.gson:gson:2.8.9")
 
 }
 

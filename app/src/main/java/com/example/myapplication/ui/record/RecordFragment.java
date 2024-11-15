@@ -4,6 +4,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.DateUtils;
+import com.example.myapplication.Utils.JsonUtils;
+import com.example.myapplication.dataBase.DataBaseHelper;
+import com.example.myapplication.dataBase.RunningRecord;
 import com.example.myapplication.databinding.FragmentRecordBinding;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class RecordFragment extends Fragment {
 
@@ -77,6 +86,42 @@ public class RecordFragment extends Fragment {
 
         return root;
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        public void addRecord(Context context, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo)
+        String timestamp = DateUtils.getCurrentTimestamp();
+        String day = DateUtils.getCurrentDay();
+        String month = DateUtils.getCurrentMonth();
+        String year = DateUtils.getCurrentYear();
+        String place = "Lugano";
+        String trainingDuration = "1:30";
+        String calories = "100";
+        String distance = "10";
+        String averageSpeed = "5";
+        List<String> detailKms = new ArrayList<>();
+        detailKms.add("6");
+        detailKms.add("6.5");
+        detailKms.add("6");
+        detailKms.add("6.5");
+        detailKms.add("5");
+        String detailKms_json = JsonUtils.toJson(detailKms);
+
+
+        List<Map<String,String>> mapInfo = new ArrayList<>();
+        mapInfo.add(Map.of("lat","60","lng","90"));
+        mapInfo.add(Map.of("lat","61","lng","91"));
+        mapInfo.add(Map.of("lat","62","lng","92"));
+        mapInfo.add(Map.of("lat","63","lng","93"));
+        mapInfo.add(Map.of("lat","64","lng","94"));
+
+        String mapInfo_json = JsonUtils.toJson(mapInfo);
+
+
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+        dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
     }
 
     @Override

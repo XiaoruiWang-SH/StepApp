@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,14 @@ import android.widget.TextView;
 import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
+import com.example.myapplication.dataBase.DataBaseHelper;
+import com.example.myapplication.dataBase.RunningRecord;
 import com.example.myapplication.databinding.FragmentDetailRecordBinding;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class RecordDetailFragment extends Fragment {
 
@@ -54,6 +62,25 @@ public class RecordDetailFragment extends Fragment {
         
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+        List<RunningRecord> runningRecords = dataBaseHelper.loadAllRecords(getContext());
+        Log.d("RecordDetailFragment", "runningRecords: " + runningRecords.stream().count());
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
+        Date yesterday = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        List<RunningRecord> recordsFormYesterday = dataBaseHelper.loadRecordsByTimestamp(getContext(), sdf.format(yesterday));
+        Log.d("RecordDetailFragment", "recordsFormYesterday: " + recordsFormYesterday.stream().count());
+
     }
 
     @Override

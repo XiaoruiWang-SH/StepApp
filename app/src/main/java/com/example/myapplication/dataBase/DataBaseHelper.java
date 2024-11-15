@@ -33,7 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String KEY_MAPINFO = "map_info";
 
     public static final String CREATE_TABLE_SQL = "CREATE TABLE " + TABLE_NAME +
-            " (" + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_DAY + " TEXT, " + KEY_MONTH + " TEXT, " + KEY_YEAR + " TEXT, " + KEY_PLACE + " TEXT, " + KEY_TRAININGDURATION + " TEXT, " + KEY_CALORIES + " TEXT, " + KEY_DISTANCE + " TEXT, " + KEY_AVESPEED + " TEXT, " + KEY_DETAILKMS + " TEXT, " + KEY_MAPINFO + " TEXT);";
+            " (" + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_TIMESTAMP + " TEXT, " + KEY_DAY + " TEXT, " + KEY_MONTH + " TEXT, " + KEY_YEAR + " TEXT, " + KEY_PLACE + " TEXT, " + KEY_TRAININGDURATION + " TEXT, " + KEY_CALORIES + " TEXT, " + KEY_DISTANCE + " TEXT, " + KEY_AVESPEED + " TEXT, " + KEY_DETAILKMS + " TEXT, " + KEY_MAPINFO + " TEXT);";
 
     private DataBaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,6 +51,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_TIMESTAMP, record.getTimestamp());
         values.put(KEY_DAY, record.getDay());
         values.put(KEY_MONTH, record.getMonth());
         values.put(KEY_YEAR, record.getYear());
@@ -65,10 +66,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void addRecord(Context context, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo){
+    public void addRecord(Context context, String timestamp, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo){
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(KEY_TIMESTAMP, timestamp);
         values.put(KEY_DAY, day);
         values.put(KEY_MONTH, month);
         values.put(KEY_YEAR, year);
@@ -83,16 +85,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public RunningRecord loadRecordByid(Context context, int id){
+    public RunningRecord loadRecordByid(Context context, int id) {
         RunningRecord record = null;
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
-        String [] columns = new String [] {KEY_ID, KEY_DAY, KEY_MONTH, KEY_YEAR, KEY_PLACE, KEY_TRAININGDURATION, KEY_CALORIES, KEY_DISTANCE, KEY_AVESPEED, KEY_DETAILKMS, KEY_MAPINFO};
+        String[] columns = new String[] {
+                KEY_ID, KEY_TIMESTAMP, KEY_DAY, KEY_MONTH, KEY_YEAR, KEY_PLACE,
+                KEY_TRAININGDURATION, KEY_CALORIES, KEY_DISTANCE, KEY_AVESPEED,
+                KEY_DETAILKMS, KEY_MAPINFO
+        };
         String where = KEY_ID + " = ?";
-        String [] whereArgs = {String.valueOf(id)};
+        String[] whereArgs = {String.valueOf(id)};
         Cursor cursor = database.query(TABLE_NAME, columns, where, whereArgs, null, null, null);
-        if (cursor.moveToFirst()){
-            record = new RunningRecord(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10));
+        if (cursor.moveToFirst()) {
+            record = new RunningRecord(
+                    cursor.getInt(0), cursor.getString(1), cursor.getString(2),
+                    cursor.getString(3), cursor.getString(4), cursor.getString(5),
+                    cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                    cursor.getString(9), cursor.getString(10), cursor.getString(11)
+            );
         }
         database.close();
         return record;
@@ -102,13 +113,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         List<RunningRecord> records = new LinkedList<>();
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
         SQLiteDatabase database = databaseHelper.getReadableDatabase();
-        String [] columns = new String [] {KEY_ID, KEY_DAY, KEY_MONTH, KEY_YEAR, KEY_PLACE, KEY_TRAININGDURATION, KEY_CALORIES, KEY_DISTANCE, KEY_AVESPEED, KEY_DETAILKMS, KEY_MAPINFO};
+        String [] columns = new String [] {KEY_ID,KEY_TIMESTAMP, KEY_DAY, KEY_MONTH, KEY_YEAR, KEY_PLACE, KEY_TRAININGDURATION, KEY_CALORIES, KEY_DISTANCE, KEY_AVESPEED, KEY_DETAILKMS, KEY_MAPINFO};
         String where = KEY_TIMESTAMP + " BETWEEN ? AND ?";
         String [] whereArgs = {from, to};
         Cursor cursor = database.query(TABLE_NAME, columns, where, whereArgs, null, null, null);
         if (cursor.moveToFirst()){
             do {
-                RunningRecord record = new RunningRecord(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7), cursor.getString(8), cursor.getString(9), cursor.getString(10));
+                RunningRecord record = new RunningRecord(
+                        cursor.getInt(0), cursor.getString(1), cursor.getString(2),
+                        cursor.getString(3), cursor.getString(4), cursor.getString(5),
+                        cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                        cursor.getString(9), cursor.getString(10), cursor.getString(11)
+                );
                 records.add(record);
             } while (cursor.moveToNext());
         }
@@ -119,6 +135,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public List<RunningRecord> loadRecordsByTimestamp(Context context, String from) {
         String to = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         return loadRecordsByTimestamp(context, from, to);
+    }
+
+    public List<RunningRecord> loadAllRecords(Context context){
+        List<RunningRecord> records = new LinkedList<>();
+        DataBaseHelper databaseHelper = new DataBaseHelper(context);
+        SQLiteDatabase database = databaseHelper.getReadableDatabase();
+        String [] columns = new String [] {KEY_ID, KEY_TIMESTAMP, KEY_DAY, KEY_MONTH, KEY_YEAR, KEY_PLACE, KEY_TRAININGDURATION, KEY_CALORIES, KEY_DISTANCE, KEY_AVESPEED, KEY_DETAILKMS, KEY_MAPINFO};
+        Cursor cursor = database.query(TABLE_NAME, columns, null, null, null, null, null);
+        if (cursor.moveToFirst()){
+            do {
+                RunningRecord record = new RunningRecord(
+                        cursor.getInt(0), cursor.getString(1), cursor.getString(2),
+                        cursor.getString(3), cursor.getString(4), cursor.getString(5),
+                        cursor.getString(6), cursor.getString(7), cursor.getString(8),
+                        cursor.getString(9), cursor.getString(10), cursor.getString(11)
+                );
+                records.add(record);
+            } while (cursor.moveToNext());
+        }
+        database.close();
+        return records;
     }
 
 

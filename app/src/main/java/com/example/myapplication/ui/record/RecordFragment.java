@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -105,21 +106,22 @@ public class RecordFragment extends Fragment {
 
     private void addSubViews(ConstraintLayout scrollViewRoot) {
         // create a text view
-        TextView textView = new TextView(getContext());
-        textView.setBackgroundColor(Color.RED);
-        textView.setId(View.generateViewId());
-        textView.setText("This is a Map here");
-        textView.setTextSize(20);
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels / 4;
+        StatisticView statisticView = new StatisticView(getContext(), height);
+        // Set an ID for StatisticView
+        statisticView.setId(View.generateViewId()); // Generate a unique ID for StatisticView
 
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                800
+                height // Full screen height in pixels
+
         );
         params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
         params.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
         params.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        textView.setLayoutParams(params);
-        scrollViewRoot.addView(textView);
+
+        statisticView.setLayoutParams(params);
+        scrollViewRoot.addView(statisticView);
 
 
         // create a button
@@ -132,28 +134,12 @@ public class RecordFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        buttonParams.topToBottom = textView.getId();
+        buttonParams.topToBottom = statisticView.getId();
         buttonParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
         buttonParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        buttonParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         button.setLayoutParams(buttonParams);
         scrollViewRoot.addView(button);
 
-        // add constraint
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(scrollViewRoot);
-//        constraintSet.connect(textView.getId(),ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP,0);
-////        constraintSet.connect(textView.getId(),ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM,0);
-//        constraintSet.connect(textView.getId(),ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START,0);
-//        constraintSet.connect(textView.getId(),ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END,0);
-//        constraintSet.constrainHeight(textView.getId(), 1000);
-//
-//        constraintSet.connect(button.getId(),ConstraintSet.TOP, textView.getId(), ConstraintSet.BOTTOM,0);
-//        constraintSet.connect(button.getId(),ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM,0);
-//        constraintSet.connect(button.getId(),ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START,0);
-//        constraintSet.connect(button.getId(),ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END,0);
-//
-//        constraintSet.applyTo(scrollViewRoot);
 
     }
 

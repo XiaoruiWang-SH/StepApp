@@ -19,10 +19,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.DateUtils;
@@ -40,8 +43,6 @@ public class RecordFragment extends Fragment {
     private RecordViewModel mViewModel;
     private FragmentRecordBinding binding;
 
-//    private Button btn;
-
     public static RecordFragment newInstance() {
         return new RecordFragment();
     }
@@ -56,49 +57,7 @@ public class RecordFragment extends Fragment {
         binding = FragmentRecordBinding.inflate(inflater, container, false);
         ConstraintLayout root = binding.getRoot();
 
-        ScrollView scrollView = new ScrollView(getContext());
-        scrollView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-
-        ConstraintLayout scrollViewRoot = new ConstraintLayout(getContext());
-        scrollViewRoot.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-        scrollView.addView(scrollViewRoot);
-        root.addView(scrollView);
-
-        addSubViews(scrollViewRoot);
-
-
-//        btn = new Button(getContext());
-//        btn.setId(View.generateViewId());
-//        btn.setText("Click");
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Navigation.findNavController(view).navigate(R.id.action_recordFragment_to_recordDetailFragment);
-//            }
-//        });
-//        root.addView(btn);
-//
-//        ConstraintSet constraintSet = new ConstraintSet();
-//        constraintSet.clone(root);
-//
-//        // add constraint
-//        constraintSet.connect(btn.getId(),ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP,0);
-//        constraintSet.connect(btn.getId(),ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM,0);
-//        constraintSet.connect(btn.getId(),ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START,0);
-//        constraintSet.connect(btn.getId(),ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END,0);
-//        constraintSet.setHorizontalBias(btn.getId(),0.5f);
-//        constraintSet.setVerticalBias(btn.getId(), 0.3f);
-//
-//        constraintSet.applyTo(root);
-
-//        NavController navController = Navigation.findNavController(root.getRootView());
-//        NavHostFragment.findNavController(this);
+        addSubViews(root);
 
         return root;
 
@@ -124,7 +83,7 @@ public class RecordFragment extends Fragment {
         scrollViewRoot.addView(statisticView);
 
 
-        SummedView summedView = new SummedView(getContext(), 1000);
+        SummedView summedView = new SummedView(getContext());
 //        summedView.setBackgroundColor(Color.RED);
         summedView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams summedViewParams = new ConstraintLayout.LayoutParams(
@@ -137,23 +96,62 @@ public class RecordFragment extends Fragment {
         summedView.setLayoutParams(summedViewParams);
         scrollViewRoot.addView(summedView);
 
+        TextView listTitleTextView = new TextView(getContext());
+        listTitleTextView.setText("Running Activities");
+        listTitleTextView.setId(View.generateViewId());
+        listTitleTextView.setTextSize(14);
+        listTitleTextView.setTextColor(Color.BLACK);
+        ConstraintLayout.LayoutParams listTitleTextViewParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
+        listTitleTextViewParams.topToBottom = summedView.getId();
+        listTitleTextViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        listTitleTextViewParams.topMargin = 20;
+        listTitleTextView.setLayoutParams(listTitleTextViewParams);
+        scrollViewRoot.addView(listTitleTextView);
 
-        // create a button
-//        Button button = new Button(getContext());
-//        button.setId(View.generateViewId());
-//        button.setText("This is a button");
-//
-//
-//        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT
-//        );
-//        buttonParams.topToBottom = statisticView.getId();
-//        buttonParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-//        buttonParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//        button.setLayoutParams(buttonParams);
-//        scrollViewRoot.addView(button);
 
+        // Create a ListView programmatically
+        ListView listView = new ListView(getContext());
+//        listView.setBackgroundColor(Color.LTGRAY);
+        listView.setId(View.generateViewId());
+        ConstraintLayout.LayoutParams listViewParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+        );
+        listViewParams.topToBottom = listTitleTextView.getId();
+        listViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        listViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        listViewParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        listViewParams.topMargin = 20;
+        listView.setLayoutParams(listViewParams);
+        scrollViewRoot.addView(listView);
+
+        // Sample data for the ListView
+        String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 1", "Item 2", "Item 3", "Item 4", "Item 1", "Item 2", "Item 3", "Item 4"};
+
+        RunningRecord record1 = new RunningRecord(1, "2024-10-26", "26", "10", "2024", "Lugano", "1:30", "100", "5", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record2 = new RunningRecord(2, "2024-10-25", "25", "10", "2024", "Shanghai", "1:30", "100", "6.5", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record3 = new RunningRecord(3, "2024-10-24", "24", "10", "2024", "Zurigo", "1:30", "100", "8", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record4 = new RunningRecord(4, "2024-10-23", "23", "10", "2024", "Lugano", "1:30", "100", "7", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record5 = new RunningRecord(5, "2024-10-22", "22", "10", "2024", "Beijing", "1:30", "100", "10", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record6 = new RunningRecord(6, "2024-10-21", "21", "10", "2024", "Lugano", "1:30", "100", "12", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record7 = new RunningRecord(7, "2024-10-20", "20", "10", "2024", "Lugano", "1:30", "100", "7", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record8 = new RunningRecord(8, "2024-10-19", "19", "10", "2024", "Lugano", "1:30", "100", "11", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+        RunningRecord record9 = new RunningRecord(9, "2024-10-18", "18", "10", "2024", "Lugano", "1:30", "100", "7.9", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
+
+
+        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9));
+
+        // Attach the adapter to the ListView
+        listView.setAdapter(activityRecordItem);
+
+        // Handle item clicks
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedItem = items[position];
+            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+        });
 
     }
 

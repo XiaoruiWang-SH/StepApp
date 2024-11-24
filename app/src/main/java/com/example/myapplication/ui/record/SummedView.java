@@ -21,12 +21,8 @@ import com.example.myapplication.R;
  */
 public class SummedView extends ConstraintLayout {
 
-    private int height = 0;
-    private int titleHeight = 40;
-
-    public SummedView(Context context, int height) {
+    public SummedView(Context context) {
         super(context);
-        this.height = height;
         init(null, 0);
     }
 

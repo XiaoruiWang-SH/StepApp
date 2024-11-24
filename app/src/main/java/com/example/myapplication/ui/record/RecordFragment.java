@@ -124,21 +124,35 @@ public class RecordFragment extends Fragment {
         scrollViewRoot.addView(statisticView);
 
 
-        // create a button
-        Button button = new Button(getContext());
-        button.setId(View.generateViewId());
-        button.setText("This is a button");
-
-
-        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
+        SummedView summedView = new SummedView(getContext(), 1000);
+//        summedView.setBackgroundColor(Color.RED);
+        summedView.setId(View.generateViewId());
+        ConstraintLayout.LayoutParams summedViewParams = new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        buttonParams.topToBottom = statisticView.getId();
-        buttonParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        buttonParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        button.setLayoutParams(buttonParams);
-        scrollViewRoot.addView(button);
+        summedViewParams.topToBottom = statisticView.getId();
+        summedViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        summedViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        summedView.setLayoutParams(summedViewParams);
+        scrollViewRoot.addView(summedView);
+
+
+        // create a button
+//        Button button = new Button(getContext());
+//        button.setId(View.generateViewId());
+//        button.setText("This is a button");
+//
+//
+//        ConstraintLayout.LayoutParams buttonParams = new ConstraintLayout.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//        );
+//        buttonParams.topToBottom = statisticView.getId();
+//        buttonParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+//        buttonParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+//        button.setLayoutParams(buttonParams);
+//        scrollViewRoot.addView(button);
 
 
     }

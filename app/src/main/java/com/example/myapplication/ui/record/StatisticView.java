@@ -47,8 +47,6 @@ public class StatisticView extends ConstraintLayout {
     private int height = 0;
     private final int segmentControlHeight = 150;
 
-    Map<String, Double>
-
     public StatisticView(Context context, int height) {
         super(context);
         this.height = height;

@@ -16,7 +16,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +34,7 @@ import com.example.myapplication.dataBase.DataBaseHelper;
 import com.example.myapplication.dataBase.RunningRecord;
 import com.example.myapplication.databinding.FragmentRecordBinding;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,8 +56,6 @@ public class RecordFragment extends Fragment {
 
         binding = FragmentRecordBinding.inflate(inflater, container, false);
         ConstraintLayout root = binding.getRoot();
-
-
 
         addSubViews(root);
 
@@ -135,6 +129,8 @@ public class RecordFragment extends Fragment {
         scrollViewRoot.addView(listView);
 
         // Sample data for the ListView
+        String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 1", "Item 2", "Item 3", "Item 4", "Item 1", "Item 2", "Item 3", "Item 4"};
+
         RunningRecord record1 = new RunningRecord(1, "2024-10-26", "26", "10", "2024", "Lugano", "1:30", "100", "5", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
         RunningRecord record2 = new RunningRecord(2, "2024-10-25", "25", "10", "2024", "Shanghai", "1:30", "100", "6.5", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
         RunningRecord record3 = new RunningRecord(3, "2024-10-24", "24", "10", "2024", "Zurigo", "1:30", "100", "8", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
@@ -145,16 +141,16 @@ public class RecordFragment extends Fragment {
         RunningRecord record8 = new RunningRecord(8, "2024-10-19", "19", "10", "2024", "Lugano", "1:30", "100", "11", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
         RunningRecord record9 = new RunningRecord(9, "2024-10-18", "18", "10", "2024", "Lugano", "1:30", "100", "7.9", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
 
-        List<RunningRecord> items = List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9);
-        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), this.runningRecords);
+
+        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9));
 
         // Attach the adapter to the ListView
         listView.setAdapter(activityRecordItem);
 
         // Handle item clicks
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            RunningRecord selectedItem = items.get(position);
-            Toast.makeText(getContext(), "Clicked: " + selectedItem.getPlace(), Toast.LENGTH_SHORT).show();
+            String selectedItem = items[position];
+            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
         });
 
     }
@@ -194,7 +190,7 @@ public class RecordFragment extends Fragment {
 
 
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
-//        dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
+        dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
     }
 
     @Override

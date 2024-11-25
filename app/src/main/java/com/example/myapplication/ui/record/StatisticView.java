@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +48,9 @@ public class StatisticView extends ConstraintLayout {
     private int height = 0;
     private final int segmentControlHeight = 150;
 
-    Map<String, Double>
+    Map<String, Double> daysSteps = new LinkedHashMap<>();
+    private Cartesian cartesian;
+    private List<DataEntry> dataEntries;
 
     public StatisticView(Context context, int height) {
         super(context);
@@ -179,6 +182,16 @@ public class StatisticView extends ConstraintLayout {
                     }
                 }
 
+                List<Map<String, String>> entries = List.of(
+                        Map.of("date", "2024-10-26", "steps", "110"),
+                        Map.of("date", "2024-10-22", "steps", "118"),
+                        Map.of("date", "2024-10-24", "steps", "115"),
+                        Map.of("date", "2024-10-23", "steps", "120"),
+                        Map.of("date", "2024-10-25", "steps", "15"),
+                        Map.of("date", "2024-10-21", "steps", "17")
+                );
+                this.configureChart(entries);
+
                 // Perform your action based on the selected segment
                 Toast.makeText(context, segments[finalIndex] + " Selected", Toast.LENGTH_SHORT).show();
             });
@@ -206,90 +219,87 @@ public class StatisticView extends ConstraintLayout {
         anyChartView.setLayoutParams(anyChartViewParams);
         parentLayout.addView(anyChartView);
 
-        Cartesian cartesian = createColumnChart();
+        this.cartesian = createColumnChart();
         anyChartView.setBackgroundColor("#00000000");
-        anyChartView.setChart(cartesian);
+        anyChartView.setChart(this.cartesian);
 
-//        // Create a TextView
-//        TextView textView = new TextView(context);
-//        textView.setBackgroundColor(Color.YELLOW);
-//        textView.setId(View.generateViewId());
-//        textView.setText("Graph Placeholder");
-//        textView.setTextSize(18);
-//
-//        // Define LayoutParams for the TextView
-//        ConstraintLayout.LayoutParams textViewParams = new ConstraintLayout.LayoutParams(
-//                LayoutParams.WRAP_CONTENT,
-//                LayoutParams.WRAP_CONTENT
-//        );
-//
-//        // Set constraints for the TextView (centered)
-//        textViewParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-//        textViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-//        textViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//
-//        // Add the TextView to the ConstraintLayout
-//        textView.setLayoutParams(textViewParams);
-//        parentLayout.addView(textView);
     }
 
 
     public Cartesian createColumnChart(){
-        //***** Read data from SQLiteDatabase *********/
-        Date now = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(now);
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-        Date sevenDaysAgo = calendar.getTime();
-        String nowS =  now.toString();
 
-        List<String> last7Days = getLastWeekDates();
+        dataEntries = new ArrayList<>();
+        List<Map<String, String>> entries = List.of(
+                Map.of("date", "2024-10-26", "steps", "10"),
+                Map.of("date", "2024-10-22", "steps", "18"),
+                Map.of("date", "2024-10-24", "steps", "15"),
+                Map.of("date", "2024-10-23", "steps", "20"),
+                Map.of("date", "2024-10-25", "steps", "5"),
+                Map.of("date", "2024-10-21", "steps", "7"),
+                Map.of("date", "2024-10-20", "steps", "24")
+        );
 
-//        Map<String, Integer> last7DaysSteps = StepAppOpenHelper.loadStepsByLast7Days(getContext(), last7Days);
-        // test data
-        Map<String, Integer> last7DaysSteps = Map.of(
-                "2024-10-26", 10,
-                "2024-10-22", 18,
-                "2024-10-24", 15,
-                "2024-10-23", 20,
-                "2024-10-25", 5,
-                "2024-10-21", 7,
-                "2024-10-20", 24);
-
-        LinkedHashMap<String, Integer> linkedHashMap = last7DaysSteps.entrySet()
-                .stream()
-                .sorted(Comparator.comparing(entry -> {
-                    String[] parts = entry.getKey().split("-");
-                    int year = Integer.parseInt(parts[0]);
-                    int month = Integer.parseInt(parts[1]);
-                    int day = Integer.parseInt(parts[2]);
-                    return new int[]{year, month, day}; // Use array for multiple comparisons
-                }, Comparator.comparingInt((int[] arr) -> arr[0]) // Compare year
-                        .thenComparingInt(arr -> arr[1])                // Then compare month
-                        .thenComparingInt(arr -> arr[2]))).collect(Collectors.toMap(
-                        entry -> entry.getKey(),   // Corrected with lambda expressions
-                        entry -> entry.getValue(), // Corrected with lambda expressions
-                        (existing, replacement) -> existing,  // Handle key conflicts
-                        LinkedHashMap::new         // Use LinkedHashMap to maintain order
-                ));              // Then compare day
-
-        Map<String, Integer> graph_map = new LinkedHashMap<>();
-
-        for (String d: last7Days) {
-            Integer v = linkedHashMap.get(d);
-            if (v == null) v = 0;
-            graph_map.put(d,v);
+        for (Map<String,String> entry : entries) {
+            dataEntries.add(new ValueDataEntry(entry.get("date"),
+                    Integer.parseInt(Objects.requireNonNull(entry.get("steps")))));
         }
 
-        //***** Create column chart using AnyChart library *********/
-        Cartesian cartesian = AnyChart.column();
+//
+//        //***** Read data from SQLiteDatabase *********/
+//        Date now = new Date();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(now);
+//        calendar.add(Calendar.DAY_OF_YEAR, -7);
+//        Date sevenDaysAgo = calendar.getTime();
+//        String nowS =  now.toString();
+//
+//        List<String> last7Days = getLastWeekDates();
+//
+////        Map<String, Integer> last7DaysSteps = StepAppOpenHelper.loadStepsByLast7Days(getContext(), last7Days);
+//        // test data
+//        Map<String, Integer> last7DaysSteps = Map.of(
+//                "2024-10-26", 10,
+//                "2024-10-22", 18,
+//                "2024-10-24", 15,
+//                "2024-10-23", 20,
+//                "2024-10-25", 5,
+//                "2024-10-21", 7,
+//                "2024-10-20", 24);
+//
+//        LinkedHashMap<String, Integer> linkedHashMap = last7DaysSteps.entrySet()
+//                .stream()
+//                .sorted(Comparator.comparing(entry -> {
+//                    String[] parts = entry.getKey().split("-");
+//                    int year = Integer.parseInt(parts[0]);
+//                    int month = Integer.parseInt(parts[1]);
+//                    int day = Integer.parseInt(parts[2]);
+//                    return new int[]{year, month, day}; // Use array for multiple comparisons
+//                }, Comparator.comparingInt((int[] arr) -> arr[0]) // Compare year
+//                        .thenComparingInt(arr -> arr[1])                // Then compare month
+//                        .thenComparingInt(arr -> arr[2]))).collect(Collectors.toMap(
+//                        entry -> entry.getKey(),   // Corrected with lambda expressions
+//                        entry -> entry.getValue(), // Corrected with lambda expressions
+//                        (existing, replacement) -> existing,  // Handle key conflicts
+//                        LinkedHashMap::new         // Use LinkedHashMap to maintain order
+//                ));              // Then compare day
+//
+//        Map<String, Integer> graph_map = new LinkedHashMap<>();
+//
+//        for (String d: last7Days) {
+//            Integer v = linkedHashMap.get(d);
+//            if (v == null) v = 0;
+//            graph_map.put(d,v);
+//        }
+//
+//        //***** Create column chart using AnyChart library *********/
+        cartesian = AnyChart.column();
+//
+//        List<DataEntry> data = new ArrayList<>();
+//
+//        for (Map.Entry<String,Integer> entry : graph_map.entrySet())
+//            data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
 
-        List<DataEntry> data = new ArrayList<>();
-
-        for (Map.Entry<String,Integer> entry : graph_map.entrySet())
-            data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
-
-        Column column = cartesian.column(data);
+        Column column = cartesian.column(this.dataEntries);
 
         //***** Modify the UI of the chart *********/
         column.fill("#1EB980");
@@ -338,6 +348,16 @@ public class StatisticView extends ConstraintLayout {
         }
         Collections.reverse(lastWeekDates);
         return lastWeekDates;
+    }
+
+    public void configureChart(List<Map<String, String>> entries) {
+        dataEntries.clear();
+        for (Map<String,String> entry : entries) {
+            dataEntries.add(new ValueDataEntry(entry.get("date"),
+                    Integer.parseInt(Objects.requireNonNull(entry.get("steps")))));
+        }
+        // Apply updated data to the chart
+        cartesian.data(dataEntries);
     }
 
 }

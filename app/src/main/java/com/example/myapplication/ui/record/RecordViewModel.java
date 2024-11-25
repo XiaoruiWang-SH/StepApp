@@ -24,10 +24,8 @@ public class RecordViewModel extends ViewModel {
 
     // TODO: Implement the ViewModel
     private final MutableLiveData<String> mText;
-    private final Context context;
 
-    public RecordViewModel(Context context) {
-        this.context = context;
+    public RecordViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is Record fragment");
     }
@@ -36,8 +34,8 @@ public class RecordViewModel extends ViewModel {
         return mText;
     }
 
-    public List<RunningRecord> getRecordList(SearchType searchType) {
-        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this.context);
+    public List<RunningRecord> getRecordList(Context context, SearchType searchType) {
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(context);
 //        List<RunningRecord> runningRecords = dataBaseHelper.loadAllRecords(getContext());
 //        Log.d("RecordDetailFragment", "runningRecords: " + runningRecords.stream().count());
 
@@ -57,7 +55,7 @@ public class RecordViewModel extends ViewModel {
         Date yesterday = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        return dataBaseHelper.loadRecordsByTimestamp(this.context, sdf.format(yesterday));
+        return dataBaseHelper.loadRecordsByTimestamp(context, sdf.format(yesterday));
     }
 
     public double getTotalDistance(List<RunningRecord> runningRecords) {

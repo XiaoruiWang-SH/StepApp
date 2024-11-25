@@ -39,13 +39,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RecordFragment extends Fragment {
 
     private RecordViewModel mViewModel;
     private FragmentRecordBinding binding;
+
+    private List<RunningRecord> recordsItems = new ArrayList<>();
+    private double totalDistance = 0;
+    Map<String, Double> stepsData = new HashMap<>();
+
+    private StatisticView statisticView;
 
     public static RecordFragment newInstance() {
         return new RecordFragment();
@@ -55,15 +63,16 @@ public class RecordFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 //        return inflater.inflate(R.layout.fragment_record, container, false);
-        RecordViewModel recordViewModel =
+        mViewModel =
                 new ViewModelProvider(this).get(RecordViewModel.class);
 
         binding = FragmentRecordBinding.inflate(inflater, container, false);
         ConstraintLayout root = binding.getRoot();
 
-
-
         addSubViews(root);
+
+        configureData(RecordViewModel.SearchType.WEEK);
+
 
         return root;
 
@@ -72,7 +81,7 @@ public class RecordFragment extends Fragment {
     private void addSubViews(ConstraintLayout scrollViewRoot) {
         // create a text view
         int height = Resources.getSystem().getDisplayMetrics().heightPixels / 4;
-        StatisticView statisticView = new StatisticView(getContext(), height);
+        this.statisticView = new StatisticView(getContext(), height);
         // Set an ID for StatisticView
         statisticView.setId(View.generateViewId()); // Generate a unique ID for StatisticView
 
@@ -145,8 +154,11 @@ public class RecordFragment extends Fragment {
         RunningRecord record8 = new RunningRecord(8, "2024-10-19", "19", "10", "2024", "Lugano", "1:30", "100", "11", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
         RunningRecord record9 = new RunningRecord(9, "2024-10-18", "18", "10", "2024", "Lugano", "1:30", "100", "7.9", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
 
-        List<RunningRecord> items = List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9);
-        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), this.runningRecords);
+
+//        List<RunningRecord> items = List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9);
+        List<RunningRecord> items = this.mViewModel.getRecordList(getContext(), RecordViewModel.SearchType.WEEK);
+        double totalDistance = this.mViewModel.getTotalDistance(items);
+        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), items);
 
         // Attach the adapter to the ListView
         listView.setAdapter(activityRecordItem);
@@ -159,7 +171,29 @@ public class RecordFragment extends Fragment {
 
     }
 
+    private void configureData(RecordViewModel.SearchType searchType) {
+        recordsItems = this.mViewModel.getRecordList(getContext(), searchType);
+        totalDistance = this.mViewModel.getTotalDistance(recordsItems);
 
+//        stepsData = recordsItems.stream().collect(Collectors.toMap(RunningRecord::getDay, record -> Double.parseDouble(record.getDistance())));
+        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), recordsItems);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        List<Map<String, String>> entries = List.of(
+                Map.of("date", "2024-10-26", "steps", "10"),
+                Map.of("date", "2024-10-22", "steps", "18"),
+                Map.of("date", "2024-10-24", "steps", "15"),
+                Map.of("date", "2024-10-23", "steps", "20"),
+                Map.of("date", "2024-10-25", "steps", "5"),
+                Map.of("date", "2024-10-21", "steps", "7"),
+                Map.of("date", "2024-10-20", "steps", "24")
+        );
+
+        this.statisticView.configureChart(entries);
+    }
 
     @Override
     public void onStart() {
@@ -193,9 +227,12 @@ public class RecordFragment extends Fragment {
         String mapInfo_json = JsonUtils.toJson(mapInfo);
 
 
+
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
 //        dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
+
     }
+
 
     @Override
     public void onDestroy() {

@@ -20,9 +20,9 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/card_background_background"
-            android:alpha="0.7" /> <!-- 使用 alpha 属性设置透明度 -->
+            android:alpha="0.3" /> <!-- 使用 alpha 属性设置透明度 -->
 
-        <!-- 模糊效果和内容 -->
+        <!-- 内容 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

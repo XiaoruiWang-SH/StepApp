@@ -24,8 +24,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import jp.wasabeef.blurry.Blurry;
-
 public class TrainingFragment extends Fragment {
 
     private TrainingViewModel mViewModel;
@@ -59,27 +57,6 @@ public class TrainingFragment extends Fragment {
 
         // 获取 ImageView 作为背景图片，使用成员变量
         imageBackground = root.findViewById(R.id.imageBackground);
-
-        if (imageBackground != null) {
-            // 确保 ImageView 不为 null，再进行模糊处理
-            imageBackground.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-                if (imageBackground.getWidth() > 0 && imageBackground.getHeight() > 0) {
-                    // 进行模糊处理
-                    Blurry.with(requireContext())
-                            .radius(55) // 设置模糊半径，可以根据需要调节模糊程度
-                            .sampling(20) // 设置采样率，值越高模糊效果越快但质量略降低
-                            .async()
-                            .capture(imageBackground)
-                            .into(imageBackground);
-
-                    // 设置透明度
-                    imageBackground.setAlpha(0.5f);
-                }
-            });
-        } else {
-            // 处理 imageBackground 为空的情况
-            Log.e("TrainingFragment", "ImageView with id R.id.imageBackground not found.");
-        }
 
         // 初始化 ViewPager2
         viewPager = binding.viewPagerTraining;

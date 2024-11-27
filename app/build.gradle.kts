@@ -14,6 +14,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        renderscriptTargetApi = 21
+        renderscriptSupportModeEnabled = true
     }
 
     buildTypes {
@@ -46,6 +48,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.legacy.support.v4)
+    implementation(libs.firebase.inappmessaging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -68,6 +71,8 @@ dependencies {
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
 
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation ("jp.wasabeef:blurry:4.0.1")
+
 
 }
 

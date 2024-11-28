@@ -5,20 +5,36 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <!-- HomeFragment -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.myapplication.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
+
+        <!-- From HomeFragment to NewRunFragment -->
         <action
-            android:id="@+id/action_homeFragment_to_newHomeFragment"
-            app:destination="@id/newHomeFragment" />
+            android:id="@+id/action_homeFragment_to_newRunFragment"
+            app:destination="@id/newRunFragment" />
+
+        <!-- From HomeFragment to NewTrainingPlanFragment -->
+        <action
+            android:id="@+id/action_homeFragment_to_newTrainingPlanFragment"
+            app:destination="@id/newTrainingPlanFragment" />
     </fragment>
 
+    <!-- NewRunFragment -->
     <fragment
-        android:id="@+id/newHomeFragment"
-        android:name="com.example.myapplication.ui.home.NewHomeFragment"
-        android:label="New Home"
-        tools:layout="@layout/fragment_new_home" />
-</navigation>
+        android:id="@+id/newRunFragment"
+        android:name="com.example.myapplication.ui.home.NewRunFragment"
+        android:label="New Run"
+        tools:layout="@layout/fragment_new_run" />
 
+    <!-- NewTrainingPlanFragment -->
+    <fragment
+        android:id="@+id/newTrainingPlanFragment"
+        android:name="com.example.myapplication.ui.home.NewTrainingPlanFragment"
+        android:label="New Training Plan"
+        tools:layout="@layout/fragment_new_training_plan" />
+
+</navigation>

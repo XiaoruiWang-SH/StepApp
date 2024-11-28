@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentHomeBinding;
@@ -29,13 +31,19 @@ public class HomeFragment extends Fragment {
         ConstraintLayout root = binding.getRoot();
         // 设置圆按钮的点击事件
         binding.circleButton.setOnClickListener(view -> {
-
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragment_container, new NewHomeFragment());
-            transaction.addToBackStack(null); // 添加到返回栈
-            transaction.commit();
+            // 获取 NavController 实例并进行跳转
+            NavController navController = Navigation.findNavController(view);
+            // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
+            navController.navigate(R.id.action_homeFragment_to_newRunFragment);
         });
+        // 在 HomeFragment.java 的 onCreateView() 方法中
+        TextView trainingPlanTextView = binding.trainingPlanValue;
+        trainingPlanTextView.setOnClickListener(view -> {
+
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_homeFragment_to_newTrainingPlanFragment);
+        });
+
 
         return root;
     }

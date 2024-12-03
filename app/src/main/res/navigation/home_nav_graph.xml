@@ -37,4 +37,12 @@
         android:label="New Training Plan"
         tools:layout="@layout/fragment_new_training_plan" />
 
+    <!-- Add EndRunFragment as a destination -->
+    <fragment
+        android:id="@+id/endRunFragment"
+        android:name="com.example.myapplication.ui.home.EndRunFragment"
+        android:label="fragment_end_run"
+        tools:layout="@layout/fragment_end_run" />
+
+
 </navigation>

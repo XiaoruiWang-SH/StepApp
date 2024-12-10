@@ -42,7 +42,14 @@
         android:id="@+id/endRunFragment"
         android:name="com.example.myapplication.ui.home.EndRunFragment"
         android:label="fragment_end_run"
-        tools:layout="@layout/fragment_end_run" />
+        tools:layout="@layout/fragment_end_run" >
+        <action
+            android:id="@+id/action_endRunFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_endRunFragment_to_newRunFragment"
+            app:destination="@id/newRunFragment" />
+    </fragment>
 
 
 </navigation>

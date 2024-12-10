@@ -22,13 +22,14 @@ public class EndRunFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_end_run, container, false);
 
-        // 找到按钮和文本 (Continue)
-        View circleButtonEnd = view.findViewById(R.id.circleButton_end);
-        TextView circleButtonEndText = view.findViewById(R.id.circleButtonEndText);
+        // 找到显示距离、时间和配速的控件
+        TextView runDistanceTextView = view.findViewById(R.id.runDistance);
+        TextView actualTimeTextView = view.findViewById(R.id.actualTime);
+        TextView currentPaceTextView = view.findViewById(R.id.currentPace);
 
-        // 找到按钮和文本 (End Run)
+        // 找到按钮 (Continue 和 End Run)
+        View circleButtonEnd = view.findViewById(R.id.circleButton_end);
         View endButton = view.findViewById(R.id.endButton);
-        TextView endButtonText = view.findViewById(R.id.endButtonText);
 
         // 使用数组封装变量，确保其是 effectively final
         final boolean[] isPaused = {false};
@@ -41,6 +42,15 @@ public class EndRunFragment extends Fragment {
             isPaused[0] = args.getBoolean("isPaused", false);
             pausedTime[0] = args.getLong("pausedTime", 0);
             totalDistance[0] = args.getDouble("totalDistance", 0.0);
+
+            // 计算时间（秒）和平均配速（秒/米）
+            double elapsedTimeInSeconds = pausedTime[0] / 1000.0;
+            double averagePace = totalDistance[0] > 0 ? elapsedTimeInSeconds / totalDistance[0] : 0;
+
+            // 动态更新显示的内容
+            runDistanceTextView.setText(String.format("Distance: %.2f m", totalDistance[0]));
+            actualTimeTextView.setText(String.format("Actual Time: %.2f s", elapsedTimeInSeconds));
+            currentPaceTextView.setText(String.format("Average Pace: %.2f s/m", averagePace));
         }
 
         // 为 Continue 按钮设置点击事件

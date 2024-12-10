@@ -80,7 +80,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/endButtonText"
+        android:id="@+id/circleButtonEndText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Continue"
@@ -92,7 +92,7 @@
         app:layout_constraintTop_toTopOf="@id/circleButton_end" />
 
     <View
-        android:id="@+id/circleButton_pause"
+        android:id="@+id/endButton"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="324dp"
@@ -103,16 +103,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/circleButtonText"
+        android:id="@+id/endButtonText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="End"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/circleButton_pause"
-        app:layout_constraintEnd_toEndOf="@+id/circleButton_pause"
-        app:layout_constraintHorizontal_bias="0.541"
-        app:layout_constraintStart_toStartOf="@+id/circleButton_pause"
-        app:layout_constraintTop_toTopOf="@+id/circleButton_pause" />
+        app:layout_constraintBottom_toBottomOf="@id/endButton"
+        app:layout_constraintEnd_toEndOf="@id/endButton"
+        app:layout_constraintStart_toStartOf="@id/endButton"
+        app:layout_constraintTop_toTopOf="@id/endButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

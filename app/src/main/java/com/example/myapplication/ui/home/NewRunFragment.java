@@ -37,17 +37,16 @@ public class NewRunFragment extends Fragment {
         estimatedTime.setText("Estimated Time: 45 minutes");
         currentPace.setText("Current Pace: 5:30 min/km");
 
-        // 设置暂停按钮的点击事件
-        View circleButtonPause = view.findViewById(R.id.circleButton_pause);
-        circleButtonPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 使用NavController进行导航
-                NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.endRunFragment); // 导航到EndRunFragment
-            }
-        });
 
+        // 找到第二个按钮和文本
+        View endButton = view.findViewById(R.id.circleButton_pause);
+        TextView endButtonText = view.findViewById(R.id.runButtonText);
+
+        // 为按钮设置点击事件
+        endButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_newRunFragment_to_endRunFragment);
+        });
+        
         return view;
     }
 }

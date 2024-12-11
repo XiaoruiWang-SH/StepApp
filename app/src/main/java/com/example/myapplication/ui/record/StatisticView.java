@@ -48,11 +48,9 @@ public class StatisticView extends ConstraintLayout {
     private int height = 0;
     private final int segmentControlHeight = 150;
 
-
     Map<String, Double> daysSteps = new LinkedHashMap<>();
     private Cartesian cartesian;
     private List<DataEntry> dataEntries;
-
 
     public StatisticView(Context context, int height) {
         super(context);

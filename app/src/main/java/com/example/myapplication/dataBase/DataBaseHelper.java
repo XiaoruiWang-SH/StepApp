@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "bestRunner";
 
     private static DataBaseHelper instance = null;
@@ -34,25 +34,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_TABLE_SQL = "CREATE TABLE " + TABLE_NAME +
             " (" + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_TIMESTAMP + " TEXT, " + KEY_DAY + " TEXT, " + KEY_MONTH + " TEXT, " + KEY_YEAR + " TEXT, " + KEY_PLACE + " TEXT, " + KEY_TRAININGDURATION + " TEXT, " + KEY_CALORIES + " TEXT, " + KEY_DISTANCE + " TEXT, " + KEY_AVESPEED + " TEXT, " + KEY_DETAILKMS + " TEXT, " + KEY_MAPINFO + " TEXT);";
-
-    // Training Plans Table
-    public static final String TRAINING_PLANS_TABLE_NAME = "training_plans";
-    public static final String TRAINING_KEY_ID = "training_id";
-    public static final String TRAINING_KEY_DATE = "training_date";
-    public static final String TRAINING_KEY_DISTANCE = "training_distance";
-    public static final String TRAINING_KEY_PACE = "training_pace";
-    public static final String TRAINING_KEY_TYPE = "training_type";
-    public static final String TRAINING_KEY_DURATION = "training_estimated_duration";
-    public static final String TRAINING_KEY_NOTES = "training_notes";
-
-    private static final String CREATE_TRAINING_PLANS_TABLE_SQL = "CREATE TABLE " + TRAINING_PLANS_TABLE_NAME +
-            " (" + TRAINING_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + TRAINING_KEY_DATE + " TEXT, "
-            + TRAINING_KEY_DISTANCE + " TEXT, "
-            + TRAINING_KEY_PACE + " TEXT, "
-            + TRAINING_KEY_TYPE + " TEXT, "
-            + TRAINING_KEY_DURATION + " TEXT, "
-            + TRAINING_KEY_NOTES + " TEXT);";
 
     private DataBaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -104,20 +85,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    // Method to add a new training plan
-    public void addTrainingPlan(Context context, TrainingPlan plan) {
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(TRAINING_KEY_DATE, plan.getTrainingDate());
-        values.put(TRAINING_KEY_DISTANCE, plan.getDistance());
-        values.put(TRAINING_KEY_PACE, plan.getPace());
-        values.put(TRAINING_KEY_TYPE, plan.getTrainingType());
-        values.put(TRAINING_KEY_DURATION, plan.getEstimatedDuration());
-        values.put(TRAINING_KEY_NOTES, plan.getNotes());
-        database.insert(TRAINING_PLANS_TABLE_NAME, null, values);
-        database.close();
-    }
-
     public RunningRecord loadRecordByid(Context context, int id) {
         RunningRecord record = null;
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
@@ -140,26 +107,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         database.close();
         return record;
-    }
-
-    // Method to load all training plans
-    public List<TrainingPlan> loadAllTrainingPlans(Context context) {
-        List<TrainingPlan> plans = new LinkedList<>();
-        SQLiteDatabase database = this.getReadableDatabase();
-        String[] columns = new String[]{TRAINING_KEY_ID, TRAINING_KEY_DATE, TRAINING_KEY_DISTANCE,
-                TRAINING_KEY_PACE, TRAINING_KEY_TYPE, TRAINING_KEY_DURATION, TRAINING_KEY_NOTES};
-        Cursor cursor = database.query(TRAINING_PLANS_TABLE_NAME, columns, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                TrainingPlan plan = new TrainingPlan(
-                        cursor.getInt(0), cursor.getString(1), cursor.getString(2),
-                        cursor.getString(3), cursor.getString(4), cursor.getString(5),
-                        cursor.getString(6));
-                plans.add(plan);
-            } while (cursor.moveToNext());
-        }
-        database.close();
-        return plans;
     }
 
     public List<RunningRecord> loadRecordsByTimestamp(Context context, String from, String to) {
@@ -211,33 +158,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return records;
     }
 
-    public void addMockTrainingPlans(Context context) {
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        // Mock Training Plan 1
-        values.put(TRAINING_KEY_DATE, "2024-11-28");
-        values.put(TRAINING_KEY_DISTANCE, "5");
-        values.put(TRAINING_KEY_PACE, "6:00");
-        values.put(TRAINING_KEY_TYPE, "Easy Run");
-        values.put(TRAINING_KEY_DURATION, "30 mins");
-        values.put(TRAINING_KEY_NOTES, "Keep a steady, comfortable pace.");
-        database.insert(TRAINING_PLANS_TABLE_NAME, null, values);
-
-        // Mock Training Plan 2
-        values.clear();
-        values.put(TRAINING_KEY_DATE, "2024-11-29");
-        values.put(TRAINING_KEY_DISTANCE, "10");
-        values.put(TRAINING_KEY_PACE, "5:30");
-        values.put(TRAINING_KEY_TYPE, "Long Run");
-        values.put(TRAINING_KEY_DURATION, "1 hour");
-        values.put(TRAINING_KEY_NOTES, "Focus on endurance, keep a consistent pace.");
-        database.insert(TRAINING_PLANS_TABLE_NAME, null, values);
-
-        database.close();
-    }
-
-
 
     public void deleteRecords(Context context){
         DataBaseHelper databaseHelper = new DataBaseHelper(context);
@@ -248,14 +168,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_SQL);
-        sqLiteDatabase.execSQL(CREATE_TRAINING_PLANS_TABLE_SQL);
-        Log.d("DatabaseHelper", "Tables created successfully.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TRAINING_PLANS_TABLE_NAME);
         onCreate(sqLiteDatabase);
 
     }

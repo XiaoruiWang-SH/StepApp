@@ -1,10 +1,27 @@
 package com.example.myapplication.ui.record;
 
+import static java.security.AccessController.getContext;
+
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.myapplication.dataBase.DataBaseHelper;
+import com.example.myapplication.dataBase.RunningRecord;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 public class RecordViewModel extends ViewModel {
+
+    public enum SearchType {
+        WEEK, MONTH, YEAR
+    };
+
     // TODO: Implement the ViewModel
     private final MutableLiveData<String> mText;
 

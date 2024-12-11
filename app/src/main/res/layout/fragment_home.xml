@@ -1,23 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <!-- 圆形按钮 -->
+    <View
+        android:id="@+id/circleButton"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/home_start"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 按钮内文字 -->
+    <TextView
+        android:id="@+id/runButtonText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/circleButton"
+        app:layout_constraintBottom_toBottomOf="@id/circleButton"
+        app:layout_constraintStart_toStartOf="@id/circleButton"
+        app:layout_constraintEnd_toEndOf="@id/circleButton" />
+
+    <!-- 左右分布的统计数据容器 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/statisticsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/circleButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 左侧（总距离） -->
+        <TextView
+            android:id="@+id/totalRunningTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Total Running"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@drawable/grid_line_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/weeklyRunningTitle" />
+
+        <TextView
+            android:id="@+id/totalRunningValue"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="100 KM"
+            android:textSize="24sp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/totalRunningTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/weeklyRunningValue" />
+
+        <!-- 右侧（每周跑步） -->
+        <TextView
+            android:id="@+id/weeklyRunningTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Weekly Running:"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@drawable/grid_line_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/totalRunningTitle"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/weeklyRunningValue"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="25 KM"
+            android:textSize="24sp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/weeklyRunningTitle"
+            app:layout_constraintStart_toEndOf="@id/totalRunningValue"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 训练计划 -->
+    <TextView
+        android:id="@+id/trainingPlanTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="My Training Plan"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/statisticsContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/trainingPlanValue"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="Marathon training plan"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/trainingPlanTitle"
+        android:background="@drawable/grid_line_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

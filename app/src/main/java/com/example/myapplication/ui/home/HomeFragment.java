@@ -49,6 +49,22 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // 检查参数并导航到 NewRunFragment
+        if (getArguments() != null && getArguments().getBoolean("openNewRun", false)) {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new NewRunFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            // 清除参数，防止重复导航
+            getArguments().remove("openNewRun");
+        }
+    }
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

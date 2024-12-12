@@ -1,5 +1,6 @@
 package com.example.myapplication.dataBase;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.myapplication.network.GptTrainingRequest;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +109,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     // Method to add a new training plan
-    public void addTrainingPlan(Context context, TrainingPlan plan) {
+    public void addTrainingPlan(TrainingPlan plan) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TRAINING_KEY_DATE, plan.getTrainingDate());
@@ -236,6 +240,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         database.close();
     }
+
+    public List<GptTrainingRequest.RunningRecord> getRecentTrainingData() {
+        List<GptTrainingRequest.RunningRecord> runningRecordList = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME +
+                " ORDER BY " + KEY_ID + " DESC LIMIT 3";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") GptTrainingRequest.RunningRecord runningRecord = new GptTrainingRequest.RunningRecord(
+                        cursor.getString(cursor.getColumnIndex(KEY_TIMESTAMP)),       // 时间戳
+                        cursor.getString(cursor.getColumnIndex(KEY_DISTANCE)),        // 距离
+                        cursor.getString(cursor.getColumnIndex(KEY_AVESPEED)),        // 平均速度
+                        cursor.getString(cursor.getColumnIndex(KEY_PLACE)),           // 地点
+                        cursor.getString(cursor.getColumnIndex(KEY_TRAININGDURATION)),// 持续时间
+                        cursor.getString(cursor.getColumnIndex(KEY_CALORIES))         // 卡路里
+                );
+                runningRecordList.add(runningRecord);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return runningRecordList;
+    }
+
 
 
 

@@ -53,13 +53,28 @@ public class HomeFragment extends Fragment {
             navController.navigate(R.id.action_homeFragment_to_newRunFragment);
         });
 
-        // 跳转到新训练计划界面
-        TextView trainingPlanTextView = binding.trainingPlanValue;
-        trainingPlanTextView.setOnClickListener(view -> {
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.action_homeFragment_to_newTrainingPlanFragment);
+        TextView marathonTrainingPlan = root.findViewById(R.id.trainingPlanValue);
+
+        // 设置点击监听器，跳转到 TrainingFragment
+        marathonTrainingPlan.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment);
         });
 
+        TextView enduranceTrainingPlan = root.findViewById(R.id.distanceTrainingValue);
+
+        // 设置点击监听器，跳转到 TrainingFragment
+        enduranceTrainingPlan.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment);
+        });
+
+        TextView sprintTrainingValue = root.findViewById(R.id.sprintTrainingValue);
+        // 设置点击监听器，跳转到 TrainingFragment
+        sprintTrainingValue.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_homeFragment_to_trainingFragment);
+        });
         return root;
     }
 

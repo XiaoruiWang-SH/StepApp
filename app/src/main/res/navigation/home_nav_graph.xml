@@ -31,6 +31,22 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"/>
+
+        <action
+            android:id="@+id/action_homeFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_viewPagerTraining"
+            app:destination="@id/trainingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 
     <!-- NewRunFragment -->
@@ -76,6 +92,12 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.myapplication.ui.training.TrainingFragment"
+        android:label="Training"
+        tools:layout="@layout/fragment_training" />
 
 
 </navigation>

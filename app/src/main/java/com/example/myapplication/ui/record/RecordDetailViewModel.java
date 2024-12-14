@@ -5,16 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class RecordDetailViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> titleText;
 
     public RecordDetailViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is Record detail fragment");
+        titleText = new MutableLiveData<>();
+        titleText.setValue("Overview");
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<String> getTitle() {
+        return titleText;
     }
 }

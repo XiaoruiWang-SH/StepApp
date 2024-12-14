@@ -11,4 +11,9 @@
     <string name="title_training">Training</string>
     <string name="title_setting">Setting</string>
 
+    <string name="lap_record_detail">Lap</string>
+    <string name="time_record_detail">Time</string>
+    <string name="distance_record_detail">Distance</string>
+    <string name="pace_record_detail">Pace</string>
+
 </resources>

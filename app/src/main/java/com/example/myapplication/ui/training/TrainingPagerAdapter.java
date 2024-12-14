@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.training;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.dataBase.TrainingPlan;
+import com.example.myapplication.ui.home.HomeFragment;
+import com.example.myapplication.ui.home.NewRunFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
@@ -41,6 +50,13 @@ public class TrainingPagerAdapter extends RecyclerView.Adapter<TrainingPagerAdap
         holder.typeTextView.setText("Type: " + plan.getTrainingType());
         holder.durationTextView.setText("Estimated Duration: " + plan.getEstimatedDuration());
         holder.notesTextView.setText("Notes: " + plan.getNotes());
+
+        holder.itemView.setOnClickListener(v -> {
+            // 调用 MainActivity 的方法来完成跳转
+            if (fragment.getActivity() instanceof MainActivity) {
+                ((MainActivity) fragment.getActivity()).navigateToHomeAndOpenNewRun();
+            }
+        });
     }
 
     @Override

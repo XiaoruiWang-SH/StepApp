@@ -26,6 +26,27 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private Fragment activeFragment;
     private Toolbar toolbar;
+    public void navigateToHomeAndOpenNewRun() {
+        if (activeFragment != homeNavHost) {
+            fragmentManager.beginTransaction()
+                    .hide(activeFragment)
+                    .show(homeNavHost)
+                    .commit();
+            activeFragment = homeNavHost;
+
+            // 切换到 Home 的 NavController 并导航到 NewRunFragment
+            NavController navController = ((NavHostFragment) homeNavHost).getNavController();
+            navController.navigate(R.id.action_homeFragment_to_newRunFragment);
+        } else {
+            // 如果已经在 Home，直接导航到 NewRunFragment
+            NavController navController = ((NavHostFragment) homeNavHost).getNavController();
+            navController.navigate(R.id.action_homeFragment_to_newRunFragment);
+        }
+
+        // 更新 BottomNavigationView 的选中状态
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

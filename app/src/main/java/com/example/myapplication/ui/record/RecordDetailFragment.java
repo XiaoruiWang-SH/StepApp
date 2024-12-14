@@ -27,7 +27,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class RecordDetailFragment extends Fragment {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class RecordDetailFragment extends Fragment implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
 
     private RecordDetailViewModel mViewModel;
 
@@ -45,6 +54,13 @@ public class RecordDetailFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(RecordDetailViewModel.class);
         ConstraintLayout root = binding.getRoot();
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map_fragment);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
         final TextView textView = binding.textRecordDetail;
         mViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -59,7 +75,6 @@ public class RecordDetailFragment extends Fragment {
             }
         });
         root.addView(btn);
-        
 
         return root;
     }
@@ -90,4 +105,15 @@ public class RecordDetailFragment extends Fragment {
     }
 
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Example: Add a marker
+        LatLng exampleLocation = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(exampleLocation).title("Marker in Sydney"));
+
+        // Move the camera
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(exampleLocation, 10));
+    }
 }

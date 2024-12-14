@@ -151,6 +151,10 @@ public class RecordFragment extends Fragment {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = items[position];
             Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+
+            NavController navController = Navigation.findNavController(view);
+            // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
+            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment);
         });
 
     }

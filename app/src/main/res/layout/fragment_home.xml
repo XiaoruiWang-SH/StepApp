@@ -9,8 +9,8 @@
     <!-- 圆形按钮 -->
     <View
         android:id="@+id/circleButton"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/home_start"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Run"
-        android:textSize="24sp"
+        android:textSize="36sp"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="@id/circleButton"
         app:layout_constraintBottom_toBottomOf="@id/circleButton"
@@ -45,8 +45,8 @@
             android:id="@+id/totalRunningTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Total Running"
-            android:textSize="20sp"
+            android:text="Total Record"
+            android:textSize="30sp"
             android:gravity="center"
             android:background="@drawable/grid_line_background"
             app:layout_constraintTop_toTopOf="parent"
@@ -56,7 +56,7 @@
         <TextView
             android:id="@+id/totalRunningValue"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:text="100 KM"
             android:textSize="24sp"
             android:gravity="center"
@@ -69,8 +69,8 @@
             android:id="@+id/weeklyRunningTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Weekly Running:"
-            android:textSize="20sp"
+            android:text="Weekly"
+            android:textSize="30sp"
             android:gravity="center"
             android:background="@drawable/grid_line_background"
             app:layout_constraintTop_toTopOf="parent"
@@ -82,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:text="25 KM"
-            android:textSize="24sp"
+            android:textSize="25sp"
             android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/weeklyRunningTitle"
             app:layout_constraintStart_toEndOf="@id/totalRunningValue"
@@ -99,9 +99,9 @@
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/statisticsContainer"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- TrainingPlanValue -->
     <TextView
         android:id="@+id/trainingPlanValue"
         android:layout_width="0dp"
@@ -109,9 +109,35 @@
         android:gravity="center"
         android:text="Marathon training plan"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@id/trainingPlanTitle"
         android:background="@drawable/grid_line_background"
+        app:layout_constraintTop_toBottomOf="@id/trainingPlanTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- 动态添加项的容器 -->
+    <TextView
+        android:id="@+id/distanceTrainingValue"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="Endurance Training plan"
+        android:textSize="24sp"
+        android:background="@drawable/grid_line_background"
+        app:layout_constraintTop_toBottomOf="@id/trainingPlanValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/sprintTrainingValue"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="Sprint Training plan"
+        android:textSize="24sp"
+        android:background="@drawable/grid_line_background"
+        app:layout_constraintTop_toBottomOf="@id/distanceTrainingValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

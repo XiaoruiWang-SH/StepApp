@@ -275,6 +275,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         int numberDeletedRecords = 0;
     }
 
+    public double getTotalDistance() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT SUM(distance) FROM " + TABLE_NAME, null);
+
+        double totalDistance = 0;
+        if (cursor.moveToFirst()) {
+            totalDistance = cursor.getDouble(0); // 获取总距离
+        }
+        cursor.close();
+        return totalDistance;
+    }
+
+    // 获取本周跑步距离
+    public double getWeeklyDistance() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT SUM(distance) FROM " + TABLE_NAME +
+                " WHERE timestamp >= strftime('%Y-%m-%d', 'now', 'start of week')";
+        Cursor cursor = db.rawQuery(query, null);
+
+        double weeklyDistance = 0;
+        if (cursor.moveToFirst()) {
+            weeklyDistance = cursor.getDouble(0); // 获取本周距离
+        }
+        cursor.close();
+        return weeklyDistance;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_SQL);

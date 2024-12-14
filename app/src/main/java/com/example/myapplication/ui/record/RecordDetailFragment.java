@@ -120,6 +120,9 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         listView.setLayoutParams(listViewParams);
         root.addView(listView);
 
+        View header = getLayoutInflater().inflate(R.layout.redorddetail_list_header, null);
+        listView.addHeaderView(header);
+
         // Sample data for the ListView
         Map<String, String> lap1 = Map.of("lap", "1", "time", "10:00", "distance", "1.0", "pace", "10:00");
         Map<String, String> lap2 = Map.of("lap", "2", "time", "20:00", "distance", "2.0", "pace", "10:00");
@@ -142,14 +145,14 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         listView.setAdapter(detailRecordItem);
 
         // Handle item clicks
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedItem = laps.get(position).get("lap");
-            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
-
-//            NavController navController = Navigation.findNavController(view);
-            // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
-//            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment);
-        });
+//        listView.setOnItemClickListener((parent, view, position, id) -> {
+//            String selectedItem = laps.get(position).get("lap");
+//            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+//
+////            NavController navController = Navigation.findNavController(view);
+//            // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
+////            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment);
+//        });
 
 
 

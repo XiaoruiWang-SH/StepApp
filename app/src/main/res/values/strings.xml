@@ -15,5 +15,25 @@
     <string name="time_record_detail">Time</string>
     <string name="distance_record_detail">Distance</string>
     <string name="pace_record_detail">Pace</string>
+<!--setting-->
+    <string name="setting_logout">Logout</string>
+    <string name="setting_theme">Theme</string>
+    <string name="setting_about">About</string>
+    <string name="setting_version">Version</string>
+    <string name="setting_language">Language</string>
+    <string name="setting_username">Username</string>
+
+<!--    setting-language-selected-->
+    <string name="setting_language_selected_title">Language Selected</string>
+    <string name="setting_language_selected_english">English</string>
+    <string name="setting_language_selected_italian">Italian</string>
+
+
+<!--    setting-theme-selected-->
+    <string name="setting_theme_selected_title">Theme Selected</string>
+    <string name="setting_theme_selected_light">Light</string>
+    <string name="setting_theme_selected_dark">Dark</string>
+
+
 
 </resources>

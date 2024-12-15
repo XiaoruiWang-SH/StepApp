@@ -135,9 +135,6 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         Map<String, String> lap9 = Map.of("lap", "9", "time", "90:00", "distance", "9.0", "pace", "10:00");
         Map<String, String> lap10 = Map.of("lap", "10", "time", "100:00", "distance", "10.0", "pace", "10:00");
 
-
-
-
         List<Map<String, String>> laps = List.of(lap1, lap2, lap3, lap4, lap5, lap6, lap7, lap8, lap9, lap10);
         DetailRecordItem detailRecordItem = new DetailRecordItem(getContext(), laps);
 

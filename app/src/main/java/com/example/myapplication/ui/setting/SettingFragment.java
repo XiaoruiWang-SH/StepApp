@@ -8,12 +8,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentSettingBinding;
 
 public class SettingFragment extends Fragment {
@@ -35,8 +39,30 @@ public class SettingFragment extends Fragment {
         binding = FragmentSettingBinding.inflate(inflater, container, false);
         ConstraintLayout root = binding.getRoot();
 
-        final TextView textView = binding.textTraining;
-        settingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textTraining;
+//        settingViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+//        binding.fragmentContainerView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+
+        binding.menuLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SettingFragment", "Language clicked");
+                NavController navController = Navigation.findNavController(v);
+                // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
+                navController.navigate(R.id.action_settingFragment_to_languageFragment);
+            }
+        });
+
+        binding.menuTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("SettingFragment", "Theme clicked");
+                NavController navController = Navigation.findNavController(v);
+                // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
+                navController.navigate(R.id.action_settingFragment_to_themeFragment);
+            }
+        });
         return root;
     }
 

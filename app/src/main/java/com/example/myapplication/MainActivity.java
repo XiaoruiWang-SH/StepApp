@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.myapplication.ui.setting.Theme;
@@ -19,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication.databinding.ActivityMainBinding;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity implements ThemeFragment.ThemeChangeListener {
 
@@ -52,6 +54,17 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Apply the saved theme before the layout is loaded
+        String theme = getSharedPreferences("theme_prefs", MODE_PRIVATE).getString("theme", "light");
+        Log.d("TAG", "onCreate: Theme: " + theme);
+        if ("dark".equals(theme)) {
+            setTheme(R.style.AppTheme_Dark);
+            Log.d("TAG", "onCreate: Dark theme applied");
+        } else {
+            setTheme(R.style.AppTheme_Light);
+            Log.d("TAG", "onCreate: Light theme applied");
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -129,13 +142,28 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
 
     @Override
     public void onThemeChange(Theme theme) {
-        // Change theme
         if (theme == Theme.LIGHT) {
-            setTheme(R.style.AppTheme_Light);
+            getSharedPreferences("theme_prefs", MODE_PRIVATE)
+                    .edit()
+                    .putString("theme", "light")
+                    .commit();
+            Log.d("TAG", "onThemeChange: Light theme applied");
+//            setTheme(R.style.AppTheme_Light);
         } else {
-            setTheme(R.style.AppTheme_Dark);
+            getSharedPreferences("theme_prefs", MODE_PRIVATE)
+                    .edit()
+                    .putString("theme", "dark")
+                    .commit();
+            Log.d("TAG", "onThemeChange: Dark theme applied");
+//            setTheme(R.style.AppTheme_Dark);
         }
-        recreate();
+        if (activeFragment != homeNavHost) {
+            fragmentManager.beginTransaction().remove(activeFragment).commit();
+            BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        }
+//        recreate();
+        restartApp();
 
 
         // Toggle theme preference
@@ -147,4 +175,13 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
 //        // Restart the activity to apply the new theme
 //        recreate();
     }
+
+    private void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // Finish the current activity
+        System.exit(0); // Kill the process to ensure a clean restart
+    }
+
 }

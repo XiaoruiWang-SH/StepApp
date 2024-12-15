@@ -57,7 +57,7 @@ public class ThemeFragment extends Fragment {
                 Log.d("menuThemeDark", "onClick: Dark theme clicked");
 //                setTheme(R.style.Theme_MyApplication_Dark);
                 if (themeChangeListener != null) {
-                    themeChangeListener.onThemeChange(Theme.LIGHT);
+                    themeChangeListener.onThemeChange(Theme.DARK);
                 }
             }
 
@@ -68,7 +68,7 @@ public class ThemeFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("menuThemeLight", "onClick: Light theme clicked");
                 if (themeChangeListener != null) {
-                    themeChangeListener.onThemeChange(Theme.DARK);
+                    themeChangeListener.onThemeChange(Theme.LIGHT);
                 }
             }
 

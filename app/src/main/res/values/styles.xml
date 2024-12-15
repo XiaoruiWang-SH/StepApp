@@ -2,10 +2,10 @@
 <resources>
     <!-- Light Theme -->
     <style name="AppTheme.Light" parent="Theme.Material3.Light.NoActionBar">
-        <item name="windowActionBar">false</item>  <!-- Disable default ActionBar -->
-        <item name="windowNoTitle">true</item>
+<!--        <item name="windowActionBar">false</item>  &lt;!&ndash; Disable default ActionBar &ndash;&gt;-->
+<!--        <item name="windowNoTitle">true</item>-->
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+<!--        <item name="android:statusBarColor">?attr/colorPrimary</item>-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/light_md_theme_primary</item>
         <item name="colorOnPrimary">@color/light_md_theme_onPrimary</item>
@@ -58,17 +58,17 @@
 
     <!-- Dark Theme -->
     <style name="AppTheme.Dark" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="windowActionBar">false</item>  <!-- Disable default ActionBar -->
-        <item name="windowNoTitle">true</item>
+<!--        <item name="windowActionBar">false</item>  &lt;!&ndash; Disable default ActionBar &ndash;&gt;-->
+<!--        <item name="windowNoTitle">true</item>-->
 
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+<!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
 
         <!-- Secondary brand color. -->
 
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+<!--        <item name="colorSecondaryVariant">@color/teal_200</item>-->
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+<!--        <item name="android:statusBarColor">?attr/colorPrimary</item>-->
         <!-- Customize your theme here. -->
 
         <item name="colorPrimary">@color/night_md_theme_primary</item>

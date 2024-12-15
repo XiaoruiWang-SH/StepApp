@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <com.example.myapplication.ui.record.SummedView
-        style="@style/Widget.Theme.MyApplication.MyView"
+        style="@style/AppTheme.Light"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:paddingLeft="20dp"

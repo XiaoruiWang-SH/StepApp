@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.myapplication.ui.setting.Theme;
+import com.example.myapplication.ui.setting.ThemeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ThemeFragment.ThemeChangeListener {
 
     private ActivityMainBinding binding;
 
@@ -125,4 +127,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onThemeChange(Theme theme) {
+        // Change theme
+        if (theme == Theme.LIGHT) {
+            setTheme(R.style.AppTheme_Light);
+        } else {
+            setTheme(R.style.AppTheme_Dark);
+        }
+        recreate();
+
+
+        // Toggle theme preference
+//        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+//        boolean isDarkMode = prefs.getBoolean(KEY_THEME, false);
+//
+//        prefs.edit().putBoolean(KEY_THEME, !isDarkMode).apply();
+//
+//        // Restart the activity to apply the new theme
+//        recreate();
+    }
 }

@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -84,7 +85,8 @@ dependencies {
 
         // Maps SDK for Android
     implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation("com.google.android.material:material:1.12.0");
+    implementation("com.google.android.material:material:1.12.0")
+//    implementation("com.google.android.gms:play-server-location:21.0.0")
 
 
 

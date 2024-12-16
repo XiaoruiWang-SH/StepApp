@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.record;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.graphics.Color;
@@ -31,8 +32,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
+import com.google.android.gms.location.Priority;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,9 +56,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.myapplication.ui.record.SummedView;
 
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+
+
+
+
 public class RecordDetailFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+
     private GoogleMap mMap;
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     private RecordDetailViewModel mViewModel;
 
@@ -61,6 +86,9 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         binding = FragmentDetailRecordBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(RecordDetailViewModel.class);
         ConstraintLayout root = binding.getRoot();
+
+        // Initialize fused location client
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -187,11 +215,80 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Example: Add a marker
-        LatLng exampleLocation = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(exampleLocation).title("Marker in Sydney"));
+        // Define the route points
+        List<LatLng> routePoints = new ArrayList<>();
+//        46.0054, 8.9556
+//        46.0048, 8.9556
+//        46.0039, 8.9556
+//        46.0036, 8.9537
+//        46.0035, 8.9526
+//        46.0028, 8.9507
+//        46.0016, 8.9500
+//        46.0003, 8.9496
+//        45.9994, 8.9495
+//        45.9986, 8.9486
+//        45.9980, 8.9479
+//        45.9973, 8.9476
+//        45.9965, 8.9472
+//        45.9953, 8.9467
+//        45.9944, 8.9464
+//        45.9932, 8.9468
+//        45.9924, 8.9474
+//        45.9920, 8.9483
+        routePoints.add(new LatLng(46.0054, 8.9556));
+        routePoints.add(new LatLng(46.0048, 8.9556));
+        routePoints.add(new LatLng(46.0039, 8.9556));
+        routePoints.add(new LatLng(46.0036, 8.9537));
+        routePoints.add(new LatLng(46.0035, 8.9526));
+        routePoints.add(new LatLng(46.0028, 8.9507));
+        routePoints.add(new LatLng(46.0016, 8.9500));
+        routePoints.add(new LatLng(46.0003, 8.9496));
+        routePoints.add(new LatLng(45.9994, 8.9495));
+        routePoints.add(new LatLng(45.9986, 8.9486));
+        routePoints.add(new LatLng(45.9980, 8.9479));
+        routePoints.add(new LatLng(45.9973, 8.9476));
+        routePoints.add(new LatLng(45.9965, 8.9472));
+        routePoints.add(new LatLng(45.9953, 8.9467));
+        routePoints.add(new LatLng(45.9944, 8.9464));
+        routePoints.add(new LatLng(45.9932, 8.9468));
+        routePoints.add(new LatLng(45.9924, 8.9474));
+        routePoints.add(new LatLng(45.9920, 8.9483));
 
-        // Move the camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(exampleLocation, 10));
+
+
+        // Draw the polyline on the map
+        Polyline route = mMap.addPolyline(new PolylineOptions()
+                .addAll(routePoints) // Add the list of LatLng points
+                .width(10) // Set line width
+                .color(Color.BLUE) // Set line color
+                .geodesic(true)); // Enable geodesic (curved lines)
+
+        // Create LatLngBounds to include all route points
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng point : routePoints) {
+            builder.include(point);
+        }
+
+        // Build the LatLngBounds
+        LatLngBounds bounds = builder.build();
+
+        // Move the camera to fit the bounds with padding
+        int padding = 100; // Offset from edges in pixels
+        // Move the camera to the first point
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (mMap != null) {
+                    onMapReady(mMap);
+                }
+            } else {
+                Toast.makeText(requireContext(), "Location permission is required to display your current location.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

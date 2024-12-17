@@ -1,0 +1,13 @@
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"> <!-- Add this line -->
+
+<!-- Menu Item -->
+<item
+    android:id="@+id/action_button"
+    android:title="@string/home_add_record"
+    android:icon="@drawable/home_add_white"
+    app:showAsAction="ifRoom" /> <!-- Corrected -->
+
+</menu>
+

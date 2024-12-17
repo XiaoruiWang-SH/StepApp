@@ -35,5 +35,8 @@
     <string name="setting_theme_selected_dark">Dark</string>
 
 
+    <string name="home_add_record">AddRecord</string>
+
+
 
 </resources>

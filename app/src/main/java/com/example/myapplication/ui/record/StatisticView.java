@@ -26,6 +26,8 @@ import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 import com.example.myapplication.R;
+import com.example.myapplication.dataBase.DataBaseHelper;
+import com.example.myapplication.dataBase.RunningRecord;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,9 +44,16 @@ import java.util.stream.Collectors;
 /**
  * TODO: document your custom view class.
  */
+
 public class StatisticView extends ConstraintLayout {
 
-    AnyChartView anyChartView;
+    private enum StatisticType {
+        WEEK,
+        MONTH,
+        YEAR
+    }
+
+    private AnyChartView anyChartView;
     private int height = 0;
     private final int segmentControlHeight = 150;
 
@@ -118,7 +128,6 @@ public class StatisticView extends ConstraintLayout {
 
     }
 
-
     // Create a method to generate a Segment Control
     private void createSegmentControl(Context context, LinearLayout parentLayout) {
         // Create a horizontal LinearLayout for the segment control
@@ -178,6 +187,7 @@ public class StatisticView extends ConstraintLayout {
                 }
 
                 // Perform your action based on the selected segment
+                // TODO switch (finalIndex) { ... }
                 Toast.makeText(context, segments[finalIndex] + " Selected", Toast.LENGTH_SHORT).show();
             });
 
@@ -241,51 +251,35 @@ public class StatisticView extends ConstraintLayout {
         Date sevenDaysAgo = calendar.getTime();
         String nowS =  now.toString();
 
-        List<String> last7Days = getLastWeekDates();
+        List<Map<String,String>> last7Days = getLastWeekDates();
 
-//        Map<String, Integer> last7DaysSteps = StepAppOpenHelper.loadStepsByLast7Days(getContext(), last7Days);
-        // test data
-        Map<String, Integer> last7DaysSteps = Map.of(
-                "2024-10-26", 10,
-                "2024-10-22", 18,
-                "2024-10-24", 15,
-                "2024-10-23", 20,
-                "2024-10-25", 5,
-                "2024-10-21", 7,
-                "2024-10-20", 24);
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
 
-        LinkedHashMap<String, Integer> linkedHashMap = last7DaysSteps.entrySet()
-                .stream()
-                .sorted(Comparator.comparing(entry -> {
-                    String[] parts = entry.getKey().split("-");
-                    int year = Integer.parseInt(parts[0]);
-                    int month = Integer.parseInt(parts[1]);
-                    int day = Integer.parseInt(parts[2]);
-                    return new int[]{year, month, day}; // Use array for multiple comparisons
-                }, Comparator.comparingInt((int[] arr) -> arr[0]) // Compare year
-                        .thenComparingInt(arr -> arr[1])                // Then compare month
-                        .thenComparingInt(arr -> arr[2]))).collect(Collectors.toMap(
-                        entry -> entry.getKey(),   // Corrected with lambda expressions
-                        entry -> entry.getValue(), // Corrected with lambda expressions
-                        (existing, replacement) -> existing,  // Handle key conflicts
-                        LinkedHashMap::new         // Use LinkedHashMap to maintain order
-                ));              // Then compare day
+        String startDate = getLastWeekStartDate();
 
-        Map<String, Integer> graph_map = new LinkedHashMap<>();
 
-        for (String d: last7Days) {
-            Integer v = linkedHashMap.get(d);
-            if (v == null) v = 0;
-            graph_map.put(d,v);
+        List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
+
+        Map<String, RunningRecord> recordsMap = new LinkedHashMap<>();
+        for ( RunningRecord record: records) {
+            recordsMap.put(record.getTimestamp(), record);
         }
+        for ( Map<String,String> day: last7Days) {
+            RunningRecord record = recordsMap.get(day.get("date"));
+            if (record != null) {
+                day.put("steps", record.getDistance());
+            }
+        }
+
 
         //***** Create column chart using AnyChart library *********/
         Cartesian cartesian = AnyChart.column();
 
         List<DataEntry> data = new ArrayList<>();
-
-        for (Map.Entry<String,Integer> entry : graph_map.entrySet())
-            data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
+        for (Map<String,String> day: last7Days) {
+            System.out.println(day.get("date") + " " + day.get("steps"));
+            data.add(new ValueDataEntry(day.get("date"), Integer.valueOf(day.get("steps"))));
+        }
 
         Column column = cartesian.column(data);
 
@@ -317,25 +311,42 @@ public class StatisticView extends ConstraintLayout {
         return cartesian;
     }
 
-    public List<String> getLastWeekDates() {
+    public void refreshGraph() {
+        Cartesian cartesian = createColumnChart();
+        anyChartView.setChart(cartesian);
+    }
+
+    public List<Map<String,String>> getLastWeekDates() {
         // Define the date format
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
 
         // Store the dates in a list
-        List<String> lastWeekDates = new ArrayList<>();
+        List<Map<String,String>> lastWeekDates = new ArrayList<>();
 
         // Get the dates for the last 7 days
         for (int i = 0; i < 7; i++) {
             // Format and add the current date to the list
             String formattedDate = dateFormat.format(calendar.getTime());
-            lastWeekDates.add(formattedDate);
+            Map<String,String> dateMap = new HashMap<>();
+            dateMap.put("date", formattedDate);
+            dateMap.put("steps", "0");
+            lastWeekDates.add(dateMap);
 
             // Move the calendar back by one day
             calendar.add(Calendar.DAY_OF_YEAR, -1);
         }
         Collections.reverse(lastWeekDates);
         return lastWeekDates;
+    }
+
+    public String getLastWeekStartDate() {
+        // Define the date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -6);
+        String formattedDate = dateFormat.format(calendar.getTime());
+        return formattedDate;
     }
 
 }

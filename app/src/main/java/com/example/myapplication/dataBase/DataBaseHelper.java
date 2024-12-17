@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 3;
@@ -68,6 +69,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         return instance;
     }
+
 
     // add
     public void addRecord(Context context, RunningRecord record){

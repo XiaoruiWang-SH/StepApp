@@ -1,13 +1,21 @@
 package com.example.myapplication;
 
+import static java.security.AccessController.getContext;
+
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import com.example.myapplication.dataBase.DataBaseHelper;
+import com.example.myapplication.dataBase.RunningRecord;
 import com.example.myapplication.ui.setting.Theme;
 import com.example.myapplication.ui.setting.ThemeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -21,8 +29,17 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapplication.databinding.ActivityMainBinding;
 import android.content.Intent;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements ThemeFragment.ThemeChangeListener {
+
+    private int backdays = 0;
 
     private ActivityMainBinding binding;
 
@@ -183,5 +200,65 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
         finish(); // Finish the current activity
         System.exit(0); // Kill the process to ensure a clean restart
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_button) {
+            // Handle button click
+            Toast.makeText(this, "Add a record", Toast.LENGTH_SHORT).show();
+            addRecord();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void addRecord() {
+
+        String date = getLastWeekStartDate();
+        backdays += 1;
+        Random random = new Random();
+        int randomDistance = random.nextInt(16);
+
+
+        // Handle button click
+        Map<String, String> record = new HashMap<>();
+        record.put("id", "0");
+        record.put("timestamp", date);
+        record.put("day", "16");
+        record.put("month", "12");
+        record.put("year", "2024");
+        record.put("place", "Park");
+        record.put("trainingDuration", "01:00:00");
+        record.put("calories", "100");
+        record.put("distance", Integer.toString(randomDistance));
+        record.put("averageSpeed", "5");
+        record.put("detailKms", "[6,6.5,6,6.5,5]");
+
+        record.put("mapInfo", "[{\"lat\":\"46.0054\",\"lng\":\"8.9556\"},{\"lat\":\"46.0048\",\"lng\":\"8.9556\"},{\"lat\":\"46.0039\",\"lng\":\"8.9556\"},{\"lat\":\"46.0036\",\"lng\":\"8.9537\"},{\"lat\":\"46.0035\",\"lng\":\"8.9526\"},{\"lat\":\"46.0028\",\"lng\":\"8.9507\"},{\"lat\":\"46.0016\",\"lng\":\"8.9500\"},{\"lat\":\"46.0003\",\"lng\":\"8.9496\"},{\"lat\":\"45.9994\",\"lng\":\"8.9495\"},{\"lat\":\"45.9986\",\"lng\":\"8.9486\"},{\"lat\":\"45.9980\",\"lng\":\"8.9479\"},{\"lat\":\"45.9973\",\"lng\":\"8.9476\"},{\"lat\":\"45.9965\",\"lng\":\"8.9472\"},{\"lat\":\"45.9953\",\"lng\":\"8.9467\"},{\"lat\":\"45.9944\",\"lng\":\"8.9464\"},{\"lat\":\"45.9932\",\"lng\":\"8.9468\"},{\"lat\":\"45.9924\",\"lng\":\"8.9474\"},{\"lat\":\"45.9920\",\"lng\":\"8.9483\"}]");
+
+        RunningRecord record1 = RunningRecord.convertFormMap(record);
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(this);
+        dataBaseHelper.addRecord(this, record1);
+
+    }
+
+    private String getLastWeekStartDate() {
+        // Define the date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -backdays);
+        String formattedDate = dateFormat.format(calendar.getTime());
+        return formattedDate;
+    }
+
+
+
 
 }

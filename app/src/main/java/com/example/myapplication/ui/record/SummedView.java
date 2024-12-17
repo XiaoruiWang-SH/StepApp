@@ -16,13 +16,27 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.anychart.core.ui.Label;
 import com.example.myapplication.R;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * TODO: document your custom view class.
  */
 public class SummedView extends ConstraintLayout {
+    public enum TYPE {
+        OVERALL,
+        DAILY,
+    }
 
-    public SummedView(Context context) {
+    private TYPE type;
+    GridView firstGridView;
+    GridView secondGridView;
+    GridView thirdGridView;
+    GridView fourthGridView;
+
+    public SummedView(Context context, TYPE type) {
         super(context);
+        this.type = type;
         init(null, 0);
     }
 
@@ -55,9 +69,9 @@ public class SummedView extends ConstraintLayout {
         addView(titleTextView);
 
 
-        GridView distancGridView = new GridView(getContext());
+        firstGridView = new GridView(getContext());
 //        distancGridView.setBackgroundColor(Color.RED);
-        distancGridView.setId(View.generateViewId());
+        firstGridView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams distanceGridViewParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -68,40 +82,40 @@ public class SummedView extends ConstraintLayout {
 //        distanceGridViewParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         distanceGridViewParams.topMargin = 20;
         distanceGridViewParams.matchConstraintPercentWidth = 0.5f;
-        distancGridView.setLayoutParams(distanceGridViewParams);
-        addView(distancGridView);
+        firstGridView.setLayoutParams(distanceGridViewParams);
+        addView(firstGridView);
 
-        GridView avgDailyGridView = new GridView(getContext());
+        secondGridView = new GridView(getContext());
 //        avgDistancGridView.setBackgroundColor(Color.BLUE);
-        avgDailyGridView.setId(View.generateViewId());
+        secondGridView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams avgDailyGridViewParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
         );
         avgDailyGridViewParams.topToBottom = titleTextView.getId();
-        avgDailyGridViewParams.startToEnd = distancGridView.getId();
+        avgDailyGridViewParams.startToEnd = firstGridView.getId();
         avgDailyGridViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        avgDailyGridViewParams.bottomToBottom = distancGridView.getId();
+        avgDailyGridViewParams.bottomToBottom = firstGridView.getId();
         avgDailyGridViewParams.topMargin = 20;
         avgDailyGridViewParams.matchConstraintPercentWidth = 0.5f;
-        avgDailyGridView.setLayoutParams(avgDailyGridViewParams);
-        addView(avgDailyGridView);
+        secondGridView.setLayoutParams(avgDailyGridViewParams);
+        addView(secondGridView);
 
-        GridView avgWeekGridView = new GridView(getContext());
+        thirdGridView = new GridView(getContext());
 //        avgWeekGridView.setBackgroundColor(Color.BLUE);
-        avgWeekGridView.setId(View.generateViewId());
+        thirdGridView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams avgWeekGridViewParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
         );
-        avgWeekGridViewParams.topToBottom = distancGridView.getId();
+        avgWeekGridViewParams.topToBottom = firstGridView.getId();
         avgWeekGridViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
 //        avgWeekGridViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
         avgWeekGridViewParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
         avgWeekGridViewParams.topMargin = 20;
         avgWeekGridViewParams.matchConstraintPercentWidth = 0.5f;
-        avgWeekGridView.setLayoutParams(avgWeekGridViewParams);
-        addView(avgWeekGridView);
+        thirdGridView.setLayoutParams(avgWeekGridViewParams);
+        addView(thirdGridView);
 
 
         View topLine = new View(getContext());
@@ -111,7 +125,7 @@ public class SummedView extends ConstraintLayout {
                 ConstraintLayout.LayoutParams.MATCH_PARENT, // Width of the line
                 1 // Height of the line (for horizontal line)
         );
-        topLineParams.topToTop = distancGridView.getId();
+        topLineParams.topToTop = firstGridView.getId();
         topLine.setLayoutParams(topLineParams);
         addView(topLine);
 
@@ -122,7 +136,7 @@ public class SummedView extends ConstraintLayout {
                 ConstraintLayout.LayoutParams.MATCH_PARENT, // Width of the line
                 1 // Height of the line (for horizontal line)
         );
-        middleLineParams.topToBottom = distancGridView.getId();
+        middleLineParams.topToBottom = firstGridView.getId();
         middleLine.setLayoutParams(middleLineParams);
         addView(middleLine);
 
@@ -146,9 +160,9 @@ public class SummedView extends ConstraintLayout {
                 1, // Width of the line
                 0 // Height of the line (for horizontal line)
         );
-        verticalLineParams.topToTop = distancGridView.getId();
+        verticalLineParams.topToTop = firstGridView.getId();
         verticalLineParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
-        verticalLineParams.startToEnd = distancGridView.getId();
+        verticalLineParams.startToEnd = firstGridView.getId();
         verticalLine.setLayoutParams(verticalLineParams);
         addView(verticalLine);
 
@@ -166,6 +180,21 @@ public class SummedView extends ConstraintLayout {
 //        rightLine.setLayoutParams(rightLineParams);
 //        addView(rightLine);
 
+
+
+    }
+
+
+    public void configureView(TYPE type, List<Map<String, String>> titleList) {
+
+        Map<String, String> firstMap = titleList.get(0);
+        firstGridView.configureView(firstMap.get("numberTextViewText"), firstMap.get("unitTextViewText"), firstMap.get("titleTextViewText"));
+
+        Map<String, String> secondMap = titleList.get(1);
+        secondGridView.configureView(secondMap.get("numberTextViewText"), secondMap.get("unitTextViewText"), secondMap.get("titleTextViewText"));
+
+        Map<String, String> thirdMap = titleList.get(2);
+        thirdGridView.configureView(thirdMap.get("numberTextViewText"), thirdMap.get("unitTextViewText"), thirdMap.get("titleTextViewText"));
 
 
     }

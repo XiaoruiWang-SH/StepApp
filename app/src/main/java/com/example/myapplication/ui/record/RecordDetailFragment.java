@@ -100,7 +100,7 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         final TextView title_overview = binding.titleOverview;
         mViewModel.getTitle().observe(getViewLifecycleOwner(), title_overview::setText);
 
-        SummedView summedView = new SummedView(getContext());
+        SummedView summedView = new SummedView(getContext(), SummedView.TYPE.DAILY);
 //        summedView.setBackgroundColor(Color.RED);
         summedView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams summedViewParams = new ConstraintLayout.LayoutParams(

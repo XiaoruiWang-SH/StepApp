@@ -19,6 +19,9 @@ import com.example.myapplication.R;
  * TODO: document your custom view class.
  */
 public class GridView extends ConstraintLayout {
+    private TextView numberTextView;
+    private TextView unitTextView;
+    private TextView titleTextView;
 
     public GridView(Context context) {
         super(context);
@@ -36,7 +39,7 @@ public class GridView extends ConstraintLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
-        TextView numberTextView = new TextView(getContext());
+        numberTextView = new TextView(getContext());
         numberTextView.setText("0");
         numberTextView.setId(View.generateViewId());
         numberTextView.setTextSize(30);
@@ -53,7 +56,7 @@ public class GridView extends ConstraintLayout {
         addView(numberTextView);
 
 
-        TextView unitTextView = new TextView(getContext());
+        unitTextView = new TextView(getContext());
         unitTextView.setText("Steps");
         unitTextView.setId(View.generateViewId());
         unitTextView.setTextSize(12);
@@ -69,7 +72,7 @@ public class GridView extends ConstraintLayout {
         addView(unitTextView);
 
 
-        TextView titleTextView = new TextView(getContext());
+        titleTextView = new TextView(getContext());
         titleTextView.setText("Total Distance");
         titleTextView.setId(View.generateViewId());
         titleTextView.setTextSize(14);
@@ -87,6 +90,14 @@ public class GridView extends ConstraintLayout {
         titleTextView.setLayoutParams(titleTextViewParams);
         addView(titleTextView);
 
+    }
+
+    public void configureView(String numberTextViewText, String unitTextViewText, String titleTextViewText) {
+        numberTextView.setText(numberTextViewText);
+
+        unitTextView.setText(unitTextViewText);
+
+        titleTextView.setText(titleTextViewText);
     }
 
 }

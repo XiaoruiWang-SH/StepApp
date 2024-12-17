@@ -44,6 +44,7 @@ public class RecordFragment extends Fragment {
     private FragmentRecordBinding binding;
 
     private StatisticView statisticView;
+    private SummedView summedView;
 
     public static RecordFragment newInstance() {
         return new RecordFragment();
@@ -85,7 +86,7 @@ public class RecordFragment extends Fragment {
         scrollViewRoot.addView(statisticView);
 
 
-        SummedView summedView = new SummedView(getContext());
+        summedView = new SummedView(getContext(), SummedView.TYPE.OVERALL);
 //        summedView.setBackgroundColor(Color.RED);
         summedView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams summedViewParams = new ConstraintLayout.LayoutParams(
@@ -197,10 +198,20 @@ public class RecordFragment extends Fragment {
 
         DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
         dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
+
+
+        refresh();
     }
 
     public void refresh(){
         Toast.makeText(getContext(), "refershvdate", Toast.LENGTH_SHORT).show();
         statisticView.refreshGraph();
+
+        summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
+                Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
+                Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration")));
+
     }
+
+
 }

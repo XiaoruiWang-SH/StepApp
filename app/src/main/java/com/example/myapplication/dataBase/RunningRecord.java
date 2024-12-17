@@ -1,10 +1,12 @@
 package com.example.myapplication.dataBase;
 
-import java.security.PublicKey;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class RunningRecord {
+public class RunningRecord implements Parcelable {
     private int id;
     private String timestamp;
     private String day;
@@ -18,7 +20,10 @@ public class RunningRecord {
     private String detailKms;
     private String mapInfo;
 
-    public RunningRecord(int id, String timestamp, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo) {
+    // Constructor
+    public RunningRecord(int id, String timestamp, String day, String month, String year,
+                         String place, String trainingDuration, String calories, String distance,
+                         String averageSpeed, String detailKms, String mapInfo) {
         this.id = id;
         this.timestamp = timestamp;
         this.day = day;
@@ -33,68 +38,84 @@ public class RunningRecord {
         this.mapInfo = mapInfo;
     }
 
-    public int getId() {
-        return id;
+    // Parcelable Constructor to recreate object
+    protected RunningRecord(Parcel in) {
+        id = in.readInt();
+        timestamp = in.readString();
+        day = in.readString();
+        month = in.readString();
+        year = in.readString();
+        place = in.readString();
+        trainingDuration = in.readString();
+        calories = in.readString();
+        distance = in.readString();
+        averageSpeed = in.readString();
+        detailKms = in.readString();
+        mapInfo = in.readString();
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(timestamp);
+        dest.writeString(day);
+        dest.writeString(month);
+        dest.writeString(year);
+        dest.writeString(place);
+        dest.writeString(trainingDuration);
+        dest.writeString(calories);
+        dest.writeString(distance);
+        dest.writeString(averageSpeed);
+        dest.writeString(detailKms);
+        dest.writeString(mapInfo);
     }
 
-    public String getDay() {
-        return day;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getMonth() {
-        return month;
-    }
+    public static final Creator<RunningRecord> CREATOR = new Creator<RunningRecord>() {
+        @Override
+        public RunningRecord createFromParcel(Parcel in) {
+            return new RunningRecord(in);
+        }
 
-    public String getYear() {
-        return year;
-    }
+        @Override
+        public RunningRecord[] newArray(int size) {
+            return new RunningRecord[size];
+        }
+    };
 
-    public String getPlace() {
-        return place;
-    }
+    // Getters
+    public int getId() { return id; }
+    public String getTimestamp() { return timestamp; }
+    public String getDay() { return day; }
+    public String getMonth() { return month; }
+    public String getYear() { return year; }
+    public String getPlace() { return place; }
+    public String getTrainingDuration() { return trainingDuration; }
+    public String getCalories() { return calories; }
+    public String getDistance() { return distance; }
+    public String getAverageSpeed() { return averageSpeed; }
+    public String getDetailKms() { return detailKms; }
+    public String getMapInfo() { return mapInfo; }
 
-    public String getTrainingDuration() {
-        return trainingDuration;
-    }
-
-    public String getCalories() {
-        return calories;
-    }
-
-    public String getDistance() {
-        return distance;
-    }
-
-    public String getAverageSpeed() {
-        return averageSpeed;
-    }
-
-    public String getDetailKms() {
-        return detailKms;
-    }
-
-    public String getMapInfo() {
-        return mapInfo;
-    }
-
+    // Converters
     public static RunningRecord convertFormMap(Map<String, String> map) {
         return new RunningRecord(
-            Integer.parseInt(map.get("id")),
-            map.get("timestamp"),
-            map.get("day"),
-            map.get("month"),
-            map.get("year"),
-            map.get("place"),
-            map.get("trainingDuration"),
-            map.get("calories"),
-            map.get("distance"),
-            map.get("averageSpeed"),
-            map.get("detailKms"),
-            map.get("mapInfo")
+                Integer.parseInt(map.get("id")),
+                map.get("timestamp"),
+                map.get("day"),
+                map.get("month"),
+                map.get("year"),
+                map.get("place"),
+                map.get("trainingDuration"),
+                map.get("calories"),
+                map.get("distance"),
+                map.get("averageSpeed"),
+                map.get("detailKms"),
+                map.get("mapInfo")
         );
     }
 
@@ -114,6 +135,4 @@ public class RunningRecord {
         map.put("mapInfo", record.getMapInfo());
         return map;
     }
-
-
 }

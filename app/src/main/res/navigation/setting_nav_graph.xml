@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.myapplication.ui.setting.SettingFragment"
-        android:label="fragment_setting"
+        android:label="Setting"
         tools:layout="@layout/fragment_setting" >
         <action
             android:id="@+id/action_settingFragment_to_languageFragment"
@@ -24,13 +24,13 @@
     <fragment
         android:id="@+id/languageFragment"
         android:name="com.example.myapplication.ui.setting.LanguageFragment"
-        android:label="LanguageFragment"
+        android:label="Language Setting"
         app:enterAnim="@anim/slide_in_left"
         app:exitAnim="@anim/slide_out_right"/>
     <fragment
         android:id="@+id/themeFragment"
         android:name="com.example.myapplication.ui.setting.ThemeFragment"
-        android:label="fragment_theme"
+        android:label="Theme Setting"
         tools:layout="@layout/fragment_theme"
         app:enterAnim="@anim/slide_in_left"
         app:exitAnim="@anim/slide_out_right"/>

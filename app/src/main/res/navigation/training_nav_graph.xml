@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/trainingFragment"
         android:name="com.example.myapplication.ui.training.TrainingFragment"
-        android:label="fragment_training"
+        android:label="Training"
         tools:layout="@layout/fragment_training" />
 </navigation>

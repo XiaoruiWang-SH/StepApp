@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/recordFragment"
         android:name="com.example.myapplication.ui.record.RecordFragment"
-        android:label="fragment_record"
+        android:label="Record"
         tools:layout="@layout/fragment_record" >
         <action
             android:id="@+id/action_recordFragment_to_recordDetailFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/recordDetailFragment"
         android:name="com.example.myapplication.ui.record.RecordDetailFragment"
-        android:label="fragment_detail_record"
+        android:label="Record Detail"
         tools:layout="@layout/fragment_detail_record" />
 <!--        add an action back to last fragment-->
         <action

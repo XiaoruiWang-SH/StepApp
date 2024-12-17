@@ -151,7 +151,8 @@ public class StatisticView extends ConstraintLayout {
 //        segmentControl.setBackgroundColor(Color.RED);
 
         // Define selected and unselected text styles
-        int selectedColor = Color.BLUE; // Selected text color
+        Resources res = context.getResources();
+        int selectedColor = res.getColor(R.color.light_md_theme_onPrimaryFixedVariant, context.getTheme()); // Selected text color
         int unselectedColor = Color.GRAY; // Unselected text color
         int underlineHeight = (int) (2 * context.getResources().getDisplayMetrics().density); // 2dp underline
 
@@ -197,8 +198,6 @@ public class StatisticView extends ConstraintLayout {
                 }
 
                 // Perform your action based on the selected segment
-                // TODO switch (finalIndex) { ... }
-                Toast.makeText(context, segments[finalIndex] + " Selected", Toast.LENGTH_SHORT).show();
                 if (listener != null) {
                     switch (finalIndex) {
                         case 0:
@@ -270,8 +269,10 @@ public class StatisticView extends ConstraintLayout {
         Column column = cartesian.column(data);
 
         //***** Modify the UI of the chart *********/
-        column.fill("#1EB980");
-        column.stroke("#1EB980");
+        Resources res = getContext().getResources();
+        int selectedColor = res.getColor(R.color.light_md_theme_inversePrimary, getContext().getTheme());
+        column.fill(String.valueOf(selectedColor));
+        column.stroke(String.valueOf(selectedColor));
 
         column.tooltip()
                 .titleFormat("At day: {%X}")

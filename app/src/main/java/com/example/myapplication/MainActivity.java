@@ -157,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
                 }
             }
 
-
-
             return true;
         });
 

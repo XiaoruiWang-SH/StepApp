@@ -2,6 +2,7 @@ package com.example.myapplication.ui.record;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -161,12 +162,15 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
 
         // Handle item clicks
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedItem = items[position];
-            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
-
+            RunningRecord selectedItem = listDataSource.get(position);
+//            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("selectedItem", selectedItem);
             NavController navController = Navigation.findNavController(view);
             // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
-            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment);
+            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment, bundle);
+
+
         });
 
     }
@@ -222,7 +226,7 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
 
     @Override
     public void onStatisticTypeChanged(StatisticView.StatisticType type) {
-        Toast.makeText(getContext(), "Statistic type changed to " + type, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Statistic type changed to " + type, Toast.LENGTH_SHORT).show();
 
         switch (type){
             case WEEK:

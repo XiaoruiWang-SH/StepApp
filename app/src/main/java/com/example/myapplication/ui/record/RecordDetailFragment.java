@@ -59,8 +59,8 @@ import com.example.myapplication.ui.record.SummedView;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-
-
+import org.json.JSONArray;
+import org.json.JSONException;
 
 
 public class RecordDetailFragment extends Fragment implements OnMapReadyCallback {
@@ -71,11 +71,17 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
 
     private SummedView summedView;
 
+    private RunningRecord runningRecord;
+
     private FusedLocationProviderClient fusedLocationClient;
 
     private RecordDetailViewModel mViewModel;
 
     private FragmentDetailRecordBinding binding;
+
+    List<Map<String, String>> laps = new ArrayList<>();
+    DetailRecordItem detailRecordItem;
+    List<LatLng> routePoints = new ArrayList<>();
 
     public static RecordDetailFragment newInstance() {
         return new RecordDetailFragment();
@@ -88,6 +94,9 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         binding = FragmentDetailRecordBinding.inflate(inflater, container, false);
         mViewModel = new ViewModelProvider(this).get(RecordDetailViewModel.class);
         ConstraintLayout root = binding.getRoot();
+        if (getArguments() != null) {
+            runningRecord = getArguments().getParcelable("selectedItem");
+        }
 
         // Initialize fused location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -153,36 +162,9 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         View header = getLayoutInflater().inflate(R.layout.redorddetail_list_header, null);
         listView.addHeaderView(header);
 
-        // Sample data for the ListView
-        Map<String, String> lap1 = Map.of("lap", "1", "time", "10:00", "distance", "1.0", "pace", "10:00");
-        Map<String, String> lap2 = Map.of("lap", "2", "time", "20:00", "distance", "2.0", "pace", "10:00");
-        Map<String, String> lap3 = Map.of("lap", "3", "time", "30:00", "distance", "3.0", "pace", "10:00");
-        Map<String, String> lap4 = Map.of("lap", "4", "time", "40:00", "distance", "4.0", "pace", "10:00");
-        Map<String, String> lap5 = Map.of("lap", "5", "time", "50:00", "distance", "5.0", "pace", "10:00");
-        Map<String, String> lap6 = Map.of("lap", "6", "time", "60:00", "distance", "6.0", "pace", "10:00");
-        Map<String, String> lap7 = Map.of("lap", "7", "time", "70:00", "distance", "7.0", "pace", "10:00");
-        Map<String, String> lap8 = Map.of("lap", "8", "time", "80:00", "distance", "8.0", "pace", "10:00");
-        Map<String, String> lap9 = Map.of("lap", "9", "time", "90:00", "distance", "9.0", "pace", "10:00");
-        Map<String, String> lap10 = Map.of("lap", "10", "time", "100:00", "distance", "10.0", "pace", "10:00");
-
-        List<Map<String, String>> laps = List.of(lap1, lap2, lap3, lap4, lap5, lap6, lap7, lap8, lap9, lap10);
-        DetailRecordItem detailRecordItem = new DetailRecordItem(getContext(), laps);
-
+        detailRecordItem = new DetailRecordItem(getContext(), laps);
         // Attach the adapter to the ListView
         listView.setAdapter(detailRecordItem);
-
-        // Handle item clicks
-//        listView.setOnItemClickListener((parent, view, position, id) -> {
-//            String selectedItem = laps.get(position).get("lap");
-//            Toast.makeText(getContext(), "Clicked: " + selectedItem, Toast.LENGTH_SHORT).show();
-//
-////            NavController navController = Navigation.findNavController(view);
-//            // 确保这行代码中的 action ID 和 nav_graph.xml 中定义的 action 一致
-////            navController.navigate(R.id.action_recordFragment_to_recordDetailFragment);
-//        });
-
-
-
 
         return root;
     }
@@ -204,7 +186,7 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         List<RunningRecord> recordsFormYesterday = dataBaseHelper.loadRecordsByTimestamp(getContext(), sdf.format(yesterday));
         Log.d("RecordDetailFragment", "recordsFormYesterday: " + recordsFormYesterday.stream().count());
 
-        configview();
+        configview(runningRecord);
 
     }
 
@@ -218,47 +200,6 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Define the route points
-        List<LatLng> routePoints = new ArrayList<>();
-//        46.0054, 8.9556
-//        46.0048, 8.9556
-//        46.0039, 8.9556
-//        46.0036, 8.9537
-//        46.0035, 8.9526
-//        46.0028, 8.9507
-//        46.0016, 8.9500
-//        46.0003, 8.9496
-//        45.9994, 8.9495
-//        45.9986, 8.9486
-//        45.9980, 8.9479
-//        45.9973, 8.9476
-//        45.9965, 8.9472
-//        45.9953, 8.9467
-//        45.9944, 8.9464
-//        45.9932, 8.9468
-//        45.9924, 8.9474
-//        45.9920, 8.9483
-        routePoints.add(new LatLng(46.0054, 8.9556));
-        routePoints.add(new LatLng(46.0048, 8.9556));
-        routePoints.add(new LatLng(46.0039, 8.9556));
-        routePoints.add(new LatLng(46.0036, 8.9537));
-        routePoints.add(new LatLng(46.0035, 8.9526));
-        routePoints.add(new LatLng(46.0028, 8.9507));
-        routePoints.add(new LatLng(46.0016, 8.9500));
-        routePoints.add(new LatLng(46.0003, 8.9496));
-        routePoints.add(new LatLng(45.9994, 8.9495));
-        routePoints.add(new LatLng(45.9986, 8.9486));
-        routePoints.add(new LatLng(45.9980, 8.9479));
-        routePoints.add(new LatLng(45.9973, 8.9476));
-        routePoints.add(new LatLng(45.9965, 8.9472));
-        routePoints.add(new LatLng(45.9953, 8.9467));
-        routePoints.add(new LatLng(45.9944, 8.9464));
-        routePoints.add(new LatLng(45.9932, 8.9468));
-        routePoints.add(new LatLng(45.9924, 8.9474));
-        routePoints.add(new LatLng(45.9920, 8.9483));
-
-
 
         // Draw the polyline on the map
         Polyline route = mMap.addPolyline(new PolylineOptions()
@@ -296,13 +237,64 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         }
     }
 
+    private void configview(RunningRecord runningRecord) {
 
-    private void configview() {
+        // summary view
+        int distance = Integer.parseInt(runningRecord.getDistance());
+        double duration = Double.parseDouble(runningRecord.getTrainingDuration());
+        double pace = duration / distance;
+
         summedView.configureView(SummedView.TYPE.OVERALL, List.of(
-                Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Distance"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Time"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "/km", "titleTextViewText", "Pace"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Calories")
+                Map.of("numberTextViewText", runningRecord.getDistance(), "unitTextViewText", "km", "titleTextViewText", "Distance"),
+                Map.of("numberTextViewText", runningRecord.getTrainingDuration(), "unitTextViewText", "min", "titleTextViewText", "Time"),
+                Map.of("numberTextViewText", Double.toString(pace), "unitTextViewText", "/km", "titleTextViewText", "Pace"),
+                Map.of("numberTextViewText", runningRecord.getCalories(), "unitTextViewText", "cal", "titleTextViewText", "Calories")
+
                 ));
+
+
+        // detail view
+        String kms = runningRecord.getDetailKms();
+        if (kms != null) {
+            List<Map<String, String>> laplist = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(kms);
+                double time = 0;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String v = jsonArray.getString(i);
+                    double lap_time = Double.parseDouble(v);
+                    time += lap_time;
+
+                    Map<String, String> lap = Map.of("lap", Integer.toString(i+1), "time", Double.toString(time), "distance", "1.0", "pace", v);
+                    laplist.add(lap);
+                    laps.clear();
+                    laps.addAll(laplist);
+                    detailRecordItem.notifyDataSetChanged();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // map view
+        String mapinfo = runningRecord.getMapInfo();
+        if (mapinfo == null) {
+            return;
+        }
+        try {
+            JSONArray jsonArray = new JSONArray(mapinfo);
+            routePoints = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String lat = jsonArray.getJSONObject(i).getString("lat");
+                String lng = jsonArray.getJSONObject(i).getString("lng");
+                routePoints.add(new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (mMap != null) {
+            mMap.clear();
+            onMapReady(mMap);
+        }
     }
 }

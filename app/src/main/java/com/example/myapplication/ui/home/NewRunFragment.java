@@ -181,34 +181,35 @@ public class NewRunFragment extends Fragment {
             if (lastLocation != null) {
                 float distance = lastLocation.distanceTo(location);
                 totalDistance += distance;
-
-                // 检查是否达到了下一个公里标
-                if (totalDistance >= nextKilometer * KILOMETER) {
-                    long currentTime = System.currentTimeMillis();
-                    double elapsedTime = (currentTime - startTime) / 1000.0; // 秒
-                    double pace = (elapsedTime / (nextKilometer * KILOMETER)) * 60.0; // 每公里分钟数
-
-                    // 获取当前坐标
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-
-                    // 添加配速到paces列表
-                    paces.add(pace);
-
-                    // 添加坐标到mapInfoList
-                    Map<String, String> coord = new HashMap<>();
-                    coord.put("lat", decimalFormat.format(latitude));
-                    coord.put("lng", decimalFormat.format(longitude));
-                    mapInfoList.add(coord);
-
-                    // 更新UI显示分割数据
-                    appendSplitToUI(nextKilometer, pace, latitude, longitude);
-
-                    // 更新下一个公里标
-                    nextKilometer++;
-                }
             }
             lastLocation = location;
+
+            long currentTime = System.currentTimeMillis();
+
+            // 检查是否达到了下一个公里标
+            if (totalDistance >= nextKilometer * KILOMETER) {
+                double elapsedTime = (currentTime - startTime) / 1000.0; // 秒
+                double pace = (elapsedTime / (nextKilometer * KILOMETER)) * 60.0; // 每公里分钟数
+
+                // 获取当前坐标
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                // 添加配速到 paces 列表
+                paces.add(pace);
+
+                // 添加坐标到 mapInfoList
+                Map<String, String> coord = new HashMap<>();
+                coord.put("lat", decimalFormat.format(latitude));
+                coord.put("lng", decimalFormat.format(longitude));
+                mapInfoList.add(coord);
+
+                // 更新UI显示分割数据
+                appendSplitToUI(nextKilometer, pace, latitude, longitude);
+
+                // 更新下一个公里标
+                nextKilometer++;
+            }
         }
 
         @Override
@@ -379,5 +380,3 @@ public class NewRunFragment extends Fragment {
         }
     }
 }
-
-

@@ -69,6 +69,8 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
+    private SummedView summedView;
+
     private FusedLocationProviderClient fusedLocationClient;
 
     private RecordDetailViewModel mViewModel;
@@ -100,7 +102,7 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         final TextView title_overview = binding.titleOverview;
         mViewModel.getTitle().observe(getViewLifecycleOwner(), title_overview::setText);
 
-        SummedView summedView = new SummedView(getContext(), SummedView.TYPE.DAILY);
+        summedView = new SummedView(getContext(), SummedView.TYPE.DAILY);
 //        summedView.setBackgroundColor(Color.RED);
         summedView.setId(View.generateViewId());
         ConstraintLayout.LayoutParams summedViewParams = new ConstraintLayout.LayoutParams(
@@ -202,6 +204,8 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
         List<RunningRecord> recordsFormYesterday = dataBaseHelper.loadRecordsByTimestamp(getContext(), sdf.format(yesterday));
         Log.d("RecordDetailFragment", "recordsFormYesterday: " + recordsFormYesterday.stream().count());
 
+        configview();
+
     }
 
     @Override
@@ -290,5 +294,15 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
                 Toast.makeText(requireContext(), "Location permission is required to display your current location.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+
+    private void configview() {
+        summedView.configureView(SummedView.TYPE.OVERALL, List.of(
+                Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Distance"),
+                Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Time"),
+                Map.of("numberTextViewText", "0", "unitTextViewText", "/km", "titleTextViewText", "Pace"),
+                Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Calories")
+                ));
     }
 }

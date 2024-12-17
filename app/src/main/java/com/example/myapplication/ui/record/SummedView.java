@@ -117,6 +117,22 @@ public class SummedView extends ConstraintLayout {
         thirdGridView.setLayoutParams(avgWeekGridViewParams);
         addView(thirdGridView);
 
+        fourthGridView = new GridView(getContext());
+//        avgWeekGridView.setBackgroundColor(Color.BLUE);
+        fourthGridView.setId(View.generateViewId());
+        ConstraintLayout.LayoutParams fourthGridViewParams = new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+        );
+        fourthGridViewParams.topToBottom = firstGridView.getId();
+        fourthGridViewParams.startToEnd = thirdGridView.getId();
+//        avgWeekGridViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        fourthGridViewParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        fourthGridViewParams.topMargin = 20;
+        fourthGridViewParams.matchConstraintPercentWidth = 0.5f;
+        fourthGridView.setLayoutParams(fourthGridViewParams);
+        addView(fourthGridView);
+
 
         View topLine = new View(getContext());
         topLine.setId(View.generateViewId());
@@ -167,21 +183,6 @@ public class SummedView extends ConstraintLayout {
         addView(verticalLine);
 
 
-//        View rightLine = new View(getContext());
-//        rightLine.setId(View.generateViewId());
-//        rightLine.setBackgroundColor(Color.BLACK); // Line color
-//        ConstraintLayout.LayoutParams rightLineParams = new ConstraintLayout.LayoutParams(
-//                1, // Width of the line
-//                0 // Height of the line (for horizontal line)
-//        );
-//        rightLineParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-//        rightLineParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
-//        rightLineParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//        rightLine.setLayoutParams(rightLineParams);
-//        addView(rightLine);
-
-
-
     }
 
 
@@ -196,6 +197,8 @@ public class SummedView extends ConstraintLayout {
         Map<String, String> thirdMap = titleList.get(2);
         thirdGridView.configureView(thirdMap.get("numberTextViewText"), thirdMap.get("unitTextViewText"), thirdMap.get("titleTextViewText"));
 
+        Map<String, String> fourthMap = titleList.get(3);
+        fourthGridView.configureView(fourthMap.get("numberTextViewText"), fourthMap.get("unitTextViewText"), fourthMap.get("titleTextViewText"));
 
     }
 

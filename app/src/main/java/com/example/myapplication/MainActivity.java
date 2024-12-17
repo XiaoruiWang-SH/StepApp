@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
         record.put("month", "12");
         record.put("year", "2024");
         record.put("place", "Park");
-        record.put("trainingDuration", "01:00:00");
+        record.put("trainingDuration", "1.5");
         record.put("calories", "100");
         record.put("distance", Integer.toString(randomDistance));
         record.put("averageSpeed", "5");

@@ -173,45 +173,42 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
     @Override
     public void onStart() {
         super.onStart();
-//        public void addRecord(Context context, String day, String month, String year, String place, String trainingDuration, String calories, String distance, String averageSpeed, String detailKms, String mapInfo)
-//        String timestamp = DateUtils.getCurrentTimestamp();
-//        String day = DateUtils.getCurrentDay();
-//        String month = DateUtils.getCurrentMonth();
-//        String year = DateUtils.getCurrentYear();
-//        String place = "Lugano";
-//        String trainingDuration = "1:30";
-//        String calories = "100";
-//        String distance = "10";
-//        String averageSpeed = "5";
-//        List<String> detailKms = new ArrayList<>();
-//        detailKms.add("6");
-//        detailKms.add("6.5");
-//        detailKms.add("6");
-//        detailKms.add("6.5");
-//        detailKms.add("5");
-//        String detailKms_json = JsonUtils.toJson(detailKms);
-//
-//
-//        List<Map<String,String>> mapInfo = new ArrayList<>();
-//        mapInfo.add(Map.of("lat","60","lng","90"));
-//        mapInfo.add(Map.of("lat","61","lng","91"));
-//        mapInfo.add(Map.of("lat","62","lng","92"));
-//        mapInfo.add(Map.of("lat","63","lng","93"));
-//        mapInfo.add(Map.of("lat","64","lng","94"));
-//
-//        String mapInfo_json = JsonUtils.toJson(mapInfo);
-//
-//
-//        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
-//        dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
-
 
         refresh();
     }
 
     public void refresh(){
-        Toast.makeText(getContext(), "refershvdate", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "refershvdate", Toast.LENGTH_SHORT).show();
         onStatisticTypeChanged(statisticType);
+
+    }
+
+
+    private void configViewForType(StatisticView.StatisticType type) {
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+        String startDate = getRecordStartDate(type);
+        List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
+        List<Map<String,String>> recordList =getReocrdsFromDates(statisticType);
+        statisticView.refreshGraph(records, recordList);
+
+        int totalDistance = 0;
+        double totalDuration = 0.0;
+        int totalCalories = 0;
+        double avgSpeed = 0;
+        for (  RunningRecord record: records) {
+            totalDistance += Integer.parseInt(record.getDistance());
+            totalDuration += Double.parseDouble(record.getTrainingDuration());
+            totalCalories += Integer.parseInt(record.getCalories());
+        }
+        avgSpeed += totalDistance / totalDuration;
+        String totalDurationStr = String.format("%.1f", totalDuration);
+        String avgSpeedStr = String.format("%.1f", avgSpeed);
+
+        summedView.configureView(SummedView.TYPE.OVERALL, List.of(
+                Map.of("numberTextViewText", Integer.toString(totalDistance), "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
+                Map.of("numberTextViewText", totalDurationStr, "unitTextViewText", "hours", "titleTextViewText", "Total Duration"),
+                Map.of("numberTextViewText", Integer.toString(totalCalories), "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
+                Map.of("numberTextViewText", avgSpeedStr, "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
 
     }
 
@@ -219,36 +216,19 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
     @Override
     public void onStatisticTypeChanged(StatisticView.StatisticType type) {
         Toast.makeText(getContext(), "Statistic type changed to " + type, Toast.LENGTH_SHORT).show();
-        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+
         switch (type){
             case WEEK:
             {
                 statisticType = StatisticView.StatisticType.WEEK;
-                String startDate = getRecordStartDate(statisticType);
-                List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
-                List<Map<String,String>> recordList =getReocrdsFromDates(statisticType);
-                statisticView.refreshGraph(records, recordList);
-
-                summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
-
+                configViewForType(statisticType);
             }
 
                 break;
             case MONTH:
             {
                 statisticType = StatisticView.StatisticType.MONTH;
-                String startDate = getRecordStartDate(statisticType);
-                List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
-                List<Map<String,String>> recordList =getReocrdsFromDates(statisticType);
-                statisticView.refreshGraph(records, recordList);
-
-                summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
-                        Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+                configViewForType(statisticType);
             }
                 break;
             case YEAR:

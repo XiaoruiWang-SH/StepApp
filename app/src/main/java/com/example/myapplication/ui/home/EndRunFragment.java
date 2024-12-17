@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class EndRunFragment extends Fragment {
@@ -34,6 +36,9 @@ public class EndRunFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private String currentLocation = "";
     private TextView currentLocationTextView;
+    private String pacesJson;
+    private String mapInfoJson;
+
 
     public EndRunFragment() {
         // Required empty public constructor
@@ -76,15 +81,17 @@ public class EndRunFragment extends Fragment {
             pausedTime[0] = args.getLong("pausedTime", 0);
             totalDistance[0] = args.getDouble("totalDistance", 0.0);
 
+
+
             // 计算时间（秒）、平均配速（秒/米）、和卡路里消耗
             double elapsedTimeInSeconds = pausedTime[0] / 1000.0;
             double averagePace = totalDistance[0] > 0 ? elapsedTimeInSeconds / totalDistance[0] : 0;
             double caloriesBurned = totalDistance[0] / 1000.0 * USER_WEIGHT * 1.036; // 距离转为 km
 
             // 动态更新显示的内容
-            runDistanceTextView.setText(String.format("Distance: %.2f m", totalDistance[0]));
-            actualTimeTextView.setText(String.format("Actual Time: %.2f s", elapsedTimeInSeconds));
-            currentPaceTextView.setText(String.format("Average Pace: %.2f s/m", averagePace));
+            runDistanceTextView.setText(String.format("Distance: %.1f m", totalDistance[0]));
+            actualTimeTextView.setText(String.format("Actual Time: %.1f s", elapsedTimeInSeconds));
+            currentPaceTextView.setText(String.format("Average Pace: %.1f s/m", averagePace));
         }
 
         // 请求位置权限
@@ -107,6 +114,8 @@ public class EndRunFragment extends Fragment {
             bundle.putBoolean("isPaused", isPaused[0]);
             bundle.putLong("pausedTime", pausedTime[0]);
             bundle.putDouble("totalDistance", totalDistance[0]);
+            bundle.putString("paces", pacesJson);
+            bundle.putString("mapInfo", mapInfoJson);
 
             // 导航回到 NewRunFragment
             Navigation.findNavController(v).navigate(R.id.action_endRunFragment_to_newRunFragment, bundle);
@@ -129,20 +138,22 @@ public class EndRunFragment extends Fragment {
 
             RunningRecord record = new RunningRecord(
                     0, // ID 自动生成
-                    currentTime, // 时间戳
+                    currentDate, // 时间戳
                     day, // 日
                     month, // 月
                     year, // 年
-                    currentLocation, // 位置
-                    String.format("%.2f", elapsedTimeInSeconds), // 持续时间
+                    "Lugano", // 位置
+                    String.format("%.2f", elapsedTimeInSeconds/3600), // 持续时间小时
                     String.format("%.2f", caloriesBurned), // 卡路里
                     String.format("%.2f", totalDistance[0]), // 距离
                     String.format("%.2f", averagePace), // 平均配速
-                    "", // 详细公里数 (如需要可添加)
-                    ""  // 地图信息 (如需要可添加)
+                    String.format("%.2f", pacesJson), // 详细公里数 (如需要可添加)
+                    String.format("%.2f", mapInfoJson)  // 地图信息 (如需要可添加)
             );
 
             databaseHelper.addRecord(requireContext(), record);
+            List<RunningRecord> list = databaseHelper.loadAllRecords(getContext());
+            Log.d("aaa", list.toString());
 
             // 返回到主页
             Navigation.findNavController(v).navigate(R.id.action_endRunFragment_to_homeFragment);
@@ -165,7 +176,7 @@ public class EndRunFragment extends Fragment {
                                 double latitude = location.getLatitude();
                                 double longitude = location.getLongitude();
                                 currentLocation = String.format(Locale.getDefault(), "%.6f, %.6f", latitude, longitude);
-                                currentLocationTextView.setText("Location: " + currentLocation);
+                                currentLocationTextView.setText("Location: Lugano\nAxis: " + currentLocation);
                             } else {
                                 currentLocation = "Unknown";
                                 currentLocationTextView.setText("Location: Unknown");
@@ -212,3 +223,4 @@ public class EndRunFragment extends Fragment {
         // 其他清理工作
     }
 }
+

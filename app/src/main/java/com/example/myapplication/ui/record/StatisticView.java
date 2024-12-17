@@ -54,6 +54,7 @@ public class StatisticView extends ConstraintLayout {
     }
 
     private AnyChartView anyChartView;
+    private Cartesian cartesian;
     private int height = 0;
     private final int segmentControlHeight = 150;
 
@@ -214,31 +215,10 @@ public class StatisticView extends ConstraintLayout {
         anyChartView.setLayoutParams(anyChartViewParams);
         parentLayout.addView(anyChartView);
 
-        Cartesian cartesian = createColumnChart();
+        cartesian = createColumnChart();
         anyChartView.setBackgroundColor("#00000000");
         anyChartView.setChart(cartesian);
 
-//        // Create a TextView
-//        TextView textView = new TextView(context);
-//        textView.setBackgroundColor(Color.YELLOW);
-//        textView.setId(View.generateViewId());
-//        textView.setText("Graph Placeholder");
-//        textView.setTextSize(18);
-//
-//        // Define LayoutParams for the TextView
-//        ConstraintLayout.LayoutParams textViewParams = new ConstraintLayout.LayoutParams(
-//                LayoutParams.WRAP_CONTENT,
-//                LayoutParams.WRAP_CONTENT
-//        );
-//
-//        // Set constraints for the TextView (centered)
-//        textViewParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
-//        textViewParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-//        textViewParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-//
-//        // Add the TextView to the ConstraintLayout
-//        textView.setLayoutParams(textViewParams);
-//        parentLayout.addView(textView);
     }
 
 
@@ -252,25 +232,6 @@ public class StatisticView extends ConstraintLayout {
         String nowS =  now.toString();
 
         List<Map<String,String>> last7Days = getLastWeekDates();
-
-        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
-
-        String startDate = getLastWeekStartDate();
-
-
-        List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
-
-        Map<String, RunningRecord> recordsMap = new LinkedHashMap<>();
-        for ( RunningRecord record: records) {
-            recordsMap.put(record.getTimestamp(), record);
-        }
-        for ( Map<String,String> day: last7Days) {
-            RunningRecord record = recordsMap.get(day.get("date"));
-            if (record != null) {
-                day.put("steps", record.getDistance());
-            }
-        }
-
 
         //***** Create column chart using AnyChart library *********/
         Cartesian cartesian = AnyChart.column();
@@ -312,8 +273,33 @@ public class StatisticView extends ConstraintLayout {
     }
 
     public void refreshGraph() {
-        Cartesian cartesian = createColumnChart();
-        anyChartView.setChart(cartesian);
+        cartesian.removeAllSeries();
+        List<Map<String,String>> last7Days = getLastWeekDates();
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+        String startDate = getLastWeekStartDate();
+
+        List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
+
+        Map<String, RunningRecord> recordsMap = new LinkedHashMap<>();
+        for ( RunningRecord record: records) {
+            recordsMap.put(record.getTimestamp(), record);
+        }
+        for ( Map<String,String> day: last7Days) {
+            RunningRecord record = recordsMap.get(day.get("date"));
+            if (record != null) {
+                day.put("steps", record.getDistance());
+            }
+        }
+
+
+        List<DataEntry> data = new ArrayList<>();
+        for (Map<String,String> day: last7Days) {
+            System.out.println(day.get("date") + " " + day.get("steps"));
+            data.add(new ValueDataEntry(day.get("date"), Integer.valueOf(day.get("steps"))));
+        }
+
+        cartesian.column(data);
+        //        anyChartView.invalidate();
     }
 
     public List<Map<String,String>> getLastWeekDates() {

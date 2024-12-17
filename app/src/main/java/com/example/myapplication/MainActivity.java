@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.example.myapplication.dataBase.DataBaseHelper;
 import com.example.myapplication.dataBase.RunningRecord;
+import com.example.myapplication.ui.record.RecordFragment;
 import com.example.myapplication.ui.setting.Theme;
 import com.example.myapplication.ui.setting.ThemeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -117,6 +118,14 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
             } else if (itemId == R.id.navigation_record) {
                 selectedNavHost = recordNavHost;
                 navController = ((NavHostFragment) recordNavHost).getNavController();
+
+                Fragment currentFragment = selectedNavHost.getChildFragmentManager().getPrimaryNavigationFragment();
+
+                if (currentFragment instanceof RecordFragment) {
+                    ((RecordFragment) currentFragment).refresh();
+                }
+
+
             } else if (itemId == R.id.navigation_training) {
                 selectedNavHost = trainingNavHost;
                 navController = ((NavHostFragment) trainingNavHost).getNavController();
@@ -210,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_button) {
-            // Handle button click
             Toast.makeText(this, "Add a record", Toast.LENGTH_SHORT).show();
             addRecord();
             return true;

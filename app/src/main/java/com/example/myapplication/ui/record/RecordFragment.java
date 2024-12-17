@@ -43,6 +43,8 @@ public class RecordFragment extends Fragment {
     private RecordViewModel mViewModel;
     private FragmentRecordBinding binding;
 
+    private StatisticView statisticView;
+
     public static RecordFragment newInstance() {
         return new RecordFragment();
     }
@@ -66,7 +68,7 @@ public class RecordFragment extends Fragment {
     private void addSubViews(ConstraintLayout scrollViewRoot) {
         // create a text view
         int height = Resources.getSystem().getDisplayMetrics().heightPixels / 4;
-        StatisticView statisticView = new StatisticView(getContext(), height);
+        statisticView = new StatisticView(getContext(), height);
         // Set an ID for StatisticView
         statisticView.setId(View.generateViewId()); // Generate a unique ID for StatisticView
 
@@ -197,19 +199,8 @@ public class RecordFragment extends Fragment {
         dataBaseHelper.addRecord(getContext(), timestamp, day, month, year, place, trainingDuration, calories, distance, averageSpeed, detailKms_json, mapInfo_json);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        binding = null;
+    public void refresh(){
+        Toast.makeText(getContext(), "refershvdate", Toast.LENGTH_SHORT).show();
+        statisticView.refreshGraph();
     }
 }

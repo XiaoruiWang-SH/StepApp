@@ -151,7 +151,7 @@ public class EndRunFragment extends Fragment {
                     String.format("%.2f", mapInfoJson)  // 地图信息 (如需要可添加)
             );
 
-            databaseHelper.addRecord(requireContext(), record);
+//            databaseHelper.addRecord(requireContext(), record);
             List<RunningRecord> list = databaseHelper.loadAllRecords(getContext());
             Log.d("aaa", list.toString());
 

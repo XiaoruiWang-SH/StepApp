@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.home;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,8 @@ import androidx.navigation.Navigation;
 import com.example.myapplication.R;
 import com.example.myapplication.dataBase.DataBaseHelper;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 public class HomeFragment extends Fragment {
 
@@ -48,6 +52,17 @@ public class HomeFragment extends Fragment {
 
         // 设置圆按钮的点击事件
         binding.circleButton.setOnClickListener(view -> {
+            // 触发震动
+            Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    // Deprecated in API 26
+                    vibrator.vibrate(100);
+                }
+            }
+
             // 获取 NavController 实例并进行跳转
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.action_homeFragment_to_newRunFragment);

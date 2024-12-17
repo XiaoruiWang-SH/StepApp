@@ -51,6 +51,8 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
     private SummedView summedView;
 
     private StatisticView.StatisticType statisticType = StatisticView.StatisticType.WEEK;
+    List<RunningRecord> listDataSource = new ArrayList<>();
+    ActivityRecordItem activityRecordItem;
 
     public static RecordFragment newInstance() {
         return new RecordFragment();
@@ -150,8 +152,9 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
         RunningRecord record8 = new RunningRecord(8, "2024-10-19", "19", "10", "2024", "Lugano", "1:30", "100", "11", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
         RunningRecord record9 = new RunningRecord(9, "2024-10-18", "18", "10", "2024", "Lugano", "1:30", "100", "7.9", "5", "[6,6.5,6,6.5,5]", "[{\"lat\":\"60\",\"lng\":\"90\"},{\"lat\":\"61\",\"lng\":\"91\"},{\"lat\":\"62\",\"lng\":\"92\"},{\"lat\":\"63\",\"lng\":\"93\"},{\"lat\":\"64\",\"lng\":\"94\"}]");
 
-
-        ActivityRecordItem activityRecordItem = new ActivityRecordItem(getContext(), List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9));
+//        List<RunningRecord> listDataSource = List.of(record1, record2, record3, record4, record5, record6, record7, record8, record9);
+        // Create an adapter for the ListView
+        activityRecordItem = new ActivityRecordItem(getContext(), listDataSource);
 
         // Attach the adapter to the ListView
         listView.setAdapter(activityRecordItem);
@@ -209,6 +212,10 @@ public class RecordFragment extends Fragment implements StatisticView.StatisticV
                 Map.of("numberTextViewText", totalDurationStr, "unitTextViewText", "hours", "titleTextViewText", "Total Duration"),
                 Map.of("numberTextViewText", Integer.toString(totalCalories), "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
                 Map.of("numberTextViewText", avgSpeedStr, "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+
+        listDataSource.clear();
+        listDataSource.addAll(records);
+        activityRecordItem.notifyDataSetChanged();
 
     }
 

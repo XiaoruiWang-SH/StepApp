@@ -47,12 +47,17 @@ import java.util.stream.Collectors;
 
 public class StatisticView extends ConstraintLayout {
 
-    private enum StatisticType {
+    public enum StatisticType {
         WEEK,
         MONTH,
         YEAR
     }
 
+    public interface StatisticViewListener {
+        void onStatisticTypeChanged(StatisticType type);
+    }
+
+    private StatisticViewListener listener;
     private AnyChartView anyChartView;
     private Cartesian cartesian;
     private int height = 0;
@@ -129,6 +134,10 @@ public class StatisticView extends ConstraintLayout {
 
     }
 
+    public void setStatisticViewListener(StatisticViewListener listener) {
+        this.listener = listener;
+    }
+
     // Create a method to generate a Segment Control
     private void createSegmentControl(Context context, LinearLayout parentLayout) {
         // Create a horizontal LinearLayout for the segment control
@@ -190,6 +199,20 @@ public class StatisticView extends ConstraintLayout {
                 // Perform your action based on the selected segment
                 // TODO switch (finalIndex) { ... }
                 Toast.makeText(context, segments[finalIndex] + " Selected", Toast.LENGTH_SHORT).show();
+                if (listener != null) {
+                    switch (finalIndex) {
+                        case 0:
+                            listener.onStatisticTypeChanged(StatisticType.WEEK);
+                            break;
+                        case 1:
+                            listener.onStatisticTypeChanged(StatisticType.MONTH);
+                            break;
+                        case 2:
+                            listener.onStatisticTypeChanged(StatisticType.YEAR);
+                            break;
+                    }
+                }
+
             });
 
             // Add the TextView to the segment control
@@ -199,6 +222,8 @@ public class StatisticView extends ConstraintLayout {
         // Add the segment control to the parent layout
         parentLayout.addView(segmentControl);
     }
+
+
 
     private void createGraph(Context context, ConstraintLayout parentLayout) {
 
@@ -272,19 +297,14 @@ public class StatisticView extends ConstraintLayout {
         return cartesian;
     }
 
-    public void refreshGraph() {
+    public void refreshGraph(List<RunningRecord> records, List<Map<String,String>> recordsList) {
         cartesian.removeAllSeries();
-        List<Map<String,String>> last7Days = getLastWeekDates();
-        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
-        String startDate = getLastWeekStartDate();
-
-        List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
 
         Map<String, RunningRecord> recordsMap = new LinkedHashMap<>();
         for ( RunningRecord record: records) {
             recordsMap.put(record.getTimestamp(), record);
         }
-        for ( Map<String,String> day: last7Days) {
+        for ( Map<String,String> day: recordsList) {
             RunningRecord record = recordsMap.get(day.get("date"));
             if (record != null) {
                 day.put("steps", record.getDistance());
@@ -293,7 +313,7 @@ public class StatisticView extends ConstraintLayout {
 
 
         List<DataEntry> data = new ArrayList<>();
-        for (Map<String,String> day: last7Days) {
+        for (Map<String,String> day: recordsList) {
             System.out.println(day.get("date") + " " + day.get("steps"));
             data.add(new ValueDataEntry(day.get("date"), Integer.valueOf(day.get("steps"))));
         }
@@ -326,13 +346,5 @@ public class StatisticView extends ConstraintLayout {
         return lastWeekDates;
     }
 
-    public String getLastWeekStartDate() {
-        // Define the date format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -6);
-        String formattedDate = dateFormat.format(calendar.getTime());
-        return formattedDate;
-    }
 
 }

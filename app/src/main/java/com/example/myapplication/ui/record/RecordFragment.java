@@ -34,17 +34,23 @@ import com.example.myapplication.dataBase.DataBaseHelper;
 import com.example.myapplication.dataBase.RunningRecord;
 import com.example.myapplication.databinding.FragmentRecordBinding;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecordFragment extends Fragment {
+public class RecordFragment extends Fragment implements StatisticView.StatisticViewListener {
 
     private RecordViewModel mViewModel;
     private FragmentRecordBinding binding;
 
     private StatisticView statisticView;
     private SummedView summedView;
+
+    private StatisticView.StatisticType statisticType = StatisticView.StatisticType.WEEK;
 
     public static RecordFragment newInstance() {
         return new RecordFragment();
@@ -72,7 +78,7 @@ public class RecordFragment extends Fragment {
         statisticView = new StatisticView(getContext(), height);
         // Set an ID for StatisticView
         statisticView.setId(View.generateViewId()); // Generate a unique ID for StatisticView
-
+        statisticView.setStatisticViewListener(this);
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 height // Full screen height in pixels
@@ -205,14 +211,114 @@ public class RecordFragment extends Fragment {
 
     public void refresh(){
         Toast.makeText(getContext(), "refershvdate", Toast.LENGTH_SHORT).show();
-        statisticView.refreshGraph();
-
-        summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
-                Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+        onStatisticTypeChanged(statisticType);
 
     }
 
+
+    @Override
+    public void onStatisticTypeChanged(StatisticView.StatisticType type) {
+        Toast.makeText(getContext(), "Statistic type changed to " + type, Toast.LENGTH_SHORT).show();
+        DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(getContext());
+        switch (type){
+            case WEEK:
+            {
+                statisticType = StatisticView.StatisticType.WEEK;
+                String startDate = getRecordStartDate(statisticType);
+                List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
+                List<Map<String,String>> recordList =getReocrdsFromDates(statisticType);
+                statisticView.refreshGraph(records, recordList);
+
+                summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+
+            }
+
+                break;
+            case MONTH:
+            {
+                statisticType = StatisticView.StatisticType.MONTH;
+                String startDate = getRecordStartDate(statisticType);
+                List<RunningRecord> records = dataBaseHelper.loadRecordsByTimestamp(getContext(), startDate);
+                List<Map<String,String>> recordList =getReocrdsFromDates(statisticType);
+                statisticView.refreshGraph(records, recordList);
+
+                summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+            }
+                break;
+            case YEAR:
+                summedView.configureView(SummedView.TYPE.OVERALL, List.of(Map.of("numberTextViewText", "0", "unitTextViewText", "km", "titleTextViewText", "Total Distance"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "min", "titleTextViewText", "Total Duration"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "cal", "titleTextViewText", "Total Calories"),
+                        Map.of("numberTextViewText", "0", "unitTextViewText", "km/h", "titleTextViewText", "Average Speed")));
+                break;
+        }
+    }
+
+
+    private List<Map<String,String>> getReocrdsFromDates(StatisticView.StatisticType type) {
+        // Define the date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+
+        // Store the dates in a list
+        List<Map<String,String>> lastWeekDates = new ArrayList<>();
+
+        int days = 7;
+        switch (type){
+            case WEEK:
+                days = 7;
+                break;
+            case MONTH:
+                days = 30;
+                break;
+            case YEAR:
+                days = 12;
+                break;
+        }
+
+        // Get the dates for the last 7 days
+        for (int i = 0; i < days; i++) {
+            // Format and add the current date to the list
+            String formattedDate = dateFormat.format(calendar.getTime());
+            Map<String,String> dateMap = new HashMap<>();
+            dateMap.put("date", formattedDate);
+            dateMap.put("steps", "0");
+            lastWeekDates.add(dateMap);
+
+            // Move the calendar back by one day
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        Collections.reverse(lastWeekDates);
+        return lastWeekDates;
+    }
+
+
+
+    private String getRecordStartDate(StatisticView.StatisticType type) {
+        // Define the date format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        int backdays = 0;
+        switch (type){
+            case WEEK:
+                backdays = 6;
+                break;
+            case MONTH:
+                backdays = 29;
+                break;
+            case YEAR:
+                backdays = 365;
+                break;
+        }
+        calendar.add(Calendar.DAY_OF_YEAR, -backdays);
+        String formattedDate = dateFormat.format(calendar.getTime());
+        return formattedDate;
+    }
 
 }

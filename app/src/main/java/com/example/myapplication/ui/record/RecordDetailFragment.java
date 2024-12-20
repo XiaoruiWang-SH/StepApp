@@ -246,7 +246,7 @@ public class RecordDetailFragment extends Fragment implements OnMapReadyCallback
 
         summedView.configureView(SummedView.TYPE.OVERALL, List.of(
                 Map.of("numberTextViewText", runningRecord.getDistance(), "unitTextViewText", "km", "titleTextViewText", "Distance"),
-                Map.of("numberTextViewText", runningRecord.getTrainingDuration(), "unitTextViewText", "min", "titleTextViewText", "Time"),
+                Map.of("numberTextViewText", runningRecord.getTrainingDuration(), "unitTextViewText", "h", "titleTextViewText", "Time"),
                 Map.of("numberTextViewText", Double.toString(pace), "unitTextViewText", "/km", "titleTextViewText", "Pace"),
                 Map.of("numberTextViewText", runningRecord.getCalories(), "unitTextViewText", "cal", "titleTextViewText", "Calories")
 

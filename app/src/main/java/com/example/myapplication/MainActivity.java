@@ -216,11 +216,11 @@ public class MainActivity extends AppCompatActivity implements ThemeFragment.The
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_button) {
-            Toast.makeText(this, "Add a record", Toast.LENGTH_SHORT).show();
-            addRecord();
-            return true;
-        }
+//        if (item.getItemId() == R.id.action_button) {
+//            Toast.makeText(this, "Add a record", Toast.LENGTH_SHORT).show();
+//            addRecord();
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
